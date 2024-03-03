@@ -1,0 +1,58 @@
+{
+    "__MAP_SCREEN__": "____________________MAP_SCREEN____________________",
+    "chooseLocations": "Choose locations",
+    "howToUseThisService": "How to use this service",
+    "howToUseThisServiceText": "Add locations that you want to be in created route and select route configuration.\n\nTo add locations you can:\n1. Click on the map.\n2. Click on “Add my current location” button. This will add location if current location is not already in the list.\n3. Input address of a location in the search field and location will be added if the address is correct.\n\nConfigure route creation:\n1. To create your own route, just order locations as you wish (you can drag them up and down).\n2. To create optimized one way route, just select start or/and end point.\n3. To create cycled route, just select corresponding option.",
+    "search": "Search",
+    "addMyCurrentLocation": "Add my current location",
+    "locations": "Locations",
+    "findRoute": "Find route",
+    "clearAllLocations": "Clear all locations",
+    "startPoint": "Start point",
+    "endPoint": "End point",
+    "currentLocation": "Current location",
+    "currentLocationWithSubText": "{}, current location",
+    "advancedOptions": "Advanced options",
+    "cycleRoute": "Cycle route",
+    "cycleRouteTitle": "Cycled route",
+    "cycleRouteText": "This option creates optimized cycle route, but for displaying route details first location you provided will be selected as starting point. You can not use other options together with this one.",
+    "setStartPoint": "Set start point",
+    "setStartPointTitle": "One way route with source",
+    "setStartPointText": "Created route will have source selected by you. This option creates optimized one way route, so order of other locations does not matter, but you can also select ending point of the route.",
+    "setEndPoint": "Set end point",
+    "setEndPointTitle": "One way route with destination",
+    "setEndPointText": "Created route will have destination selected by you. This option creates optimized one way route, so order of other locations does not matter, but you can also select starting point of the route.",
+    "route": "Route",
+    "distance": {
+        "km": "{} km",
+        "m": "{} m"
+    },
+    "time": {
+        "hr": "{} hr",
+        "min": "{} min",
+        "hrAndMin": "{} hr {} min"
+    },
+    "total": "Total:",
+    "back": "Back",
+    "creatingRoute": "Creating route...",
+    "point": "Point {}",
+
+
+    "__NOTIFICATIONS__": "____________________NOTIFICATIONS____________________",
+    "noInternetConnection": "No internet connection",
+    "noInternetConnectionText": "To use this function, internet is required. Please check your internet connection.",
+    "ok": "Ok",
+    "currentLocationsLimit": "Current locations limit",
+    "currentLocationsLimitText": "You can add only one current location to the list of locations.",
+    "locationsLimit": "Locations limit",
+    "locationsLimitText": "There is a limit of {} locations that you can add to the current route.",
+
+
+    "__ERRORS__": "____________________ERRORS____________________",
+    "addingLocationFailure": "Adding location failure",
+    "addingLocationFailureText": "Something happened while adding new location. Please try again.",
+    "addingCurrentLocationFailure": "Unable to add current location",
+    "addingCurrentLocationFailureText": "Something happened while adding current location. Please ensure that location permission was granted.",
+    "creatingRouteFailure": "Creating route failure",
+    "creatingRouteFailureText": "Something happened while creating route. Please try again. If you can not create route with provided locations again and again, try to remove some locations that you think can interfere route creating."
+}
