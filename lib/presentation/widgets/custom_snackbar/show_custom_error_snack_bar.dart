@@ -4,7 +4,9 @@ import 'package:kursova/resources/app_typography.dart';
 import 'package:kursova/resources/app_ui_constants.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-void showCustomSnackbar({
+/// Shows a custom error snackbar on top of the screen with animation of appearing and disappearing.
+/// The snackbar will disappear after [displayDurationInSeconds] seconds.
+void showCustomErrorSnackbar({
   required BuildContext context,
   required String title,
   required String text,
@@ -12,7 +14,7 @@ void showCustomSnackbar({
 }) =>
     showTopSnackBar(
       Overlay.of(context),
-      CustomSnackBar(
+      CustomErrorSnackBar(
         title: title,
         text: text,
       ),
@@ -21,8 +23,8 @@ void showCustomSnackbar({
       displayDuration: Duration(seconds: displayDurationInSeconds),
     );
 
-class CustomSnackBar extends StatefulWidget {
-  const CustomSnackBar({
+class CustomErrorSnackBar extends StatefulWidget {
+  const CustomErrorSnackBar({
     Key? key,
     required this.title,
     required this.text,
@@ -32,10 +34,10 @@ class CustomSnackBar extends StatefulWidget {
   final String text;
 
   @override
-  State<CustomSnackBar> createState() => _CustomSnackBarState();
+  State<CustomErrorSnackBar> createState() => _CustomErrorSnackBarState();
 }
 
-class _CustomSnackBarState extends State<CustomSnackBar> {
+class _CustomErrorSnackBarState extends State<CustomErrorSnackBar> {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -49,13 +51,13 @@ class _CustomSnackBarState extends State<CustomSnackBar> {
           minWidth: 300,
         ),
         decoration: BoxDecoration(
-          color: AppColors.snackbarBackgroundColor,
+          color: AppColors.snackbarErrorBackgroundColor,
           borderRadius: BorderRadius.circular(
             AppUIConstants.commonBorderRadius,
           ),
           border: Border.all(
             width: AppUIConstants.commonBorderWidth,
-            color: AppColors.snackbarBorderColor,
+            color: AppColors.snackbarErrorBorderColor,
           ),
         ),
         child: Column(
@@ -65,14 +67,14 @@ class _CustomSnackBarState extends State<CustomSnackBar> {
           children: [
             DefaultTextStyle(
               style: AppTypography.h2Style.copyWith(
-                color: AppColors.snackbarForegroundColor,
+                color: AppColors.snackbarErrorForegroundColor,
               ),
               child: Text(widget.title),
             ),
             const SizedBox(height: 5),
             DefaultTextStyle(
               style: AppTypography.mainTextStyle.copyWith(
-                color: AppColors.snackbarForegroundColor,
+                color: AppColors.snackbarErrorForegroundColor,
               ),
               child: Text(widget.text),
             ),

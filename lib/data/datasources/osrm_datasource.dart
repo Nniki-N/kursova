@@ -53,9 +53,11 @@ class OsrmDatasource {
           stackTrace: StackTrace.current,
         );
       }
-    } on OsrmException {
+    } on OsrmException catch (exception, stackTrace) {
+      print('$exception, $stackTrace 11111');
       rethrow;
     } catch (exception, stackTrace) {
+      print('$exception, $stackTrace 22222');
       throw RouteRetrievingOsrmException(
         messageDetails: exception.toString(),
         stackTrace: stackTrace,

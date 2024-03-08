@@ -5,6 +5,8 @@ import 'package:kursova/resources/app_colors.dart';
 import 'package:kursova/resources/app_typography.dart';
 import 'package:kursova/resources/app_ui_constants.dart';
 
+
+/// A search field that contains an enter button on the right side.
 class CustomSearchField extends StatelessWidget {
   final TextEditingController controller;
   final void Function()? onTap;

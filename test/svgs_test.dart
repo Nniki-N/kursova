@@ -10,6 +10,7 @@ void main() {
     expect(File(Svgs.infoIcon).existsSync(), isTrue);
     expect(File(Svgs.locationIcon).existsSync(), isTrue);
     expect(File(Svgs.markerIcon).existsSync(), isTrue);
+    expect(File(Svgs.menuIcon).existsSync(), isTrue);
     expect(File(Svgs.smallArrowLeftIcon).existsSync(), isTrue);
   });
 }

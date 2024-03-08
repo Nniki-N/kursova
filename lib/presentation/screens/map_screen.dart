@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -15,12 +16,17 @@ import 'package:kursova/presentation/blocs/map_markers_bloc/map_markers_state.da
 import 'package:kursova/presentation/blocs/route_bloc/route_bloc.dart';
 import 'package:kursova/presentation/blocs/route_bloc/route_state.dart';
 import 'package:kursova/presentation/cubits/side_bar_menu_visibility_cubit.dart';
+import 'package:kursova/presentation/screens/side_bar/choose_locations_side_bar_content.dart';
+import 'package:kursova/presentation/screens/side_bar/loading_side_bar_content.dart';
+import 'package:kursova/presentation/screens/side_bar/route_details_side_bar_content.dart';
 import 'package:kursova/presentation/screens/side_bar/side_bar.dart';
 import 'package:kursova/presentation/screens/side_bar/widgets/language_dropdown.dart';
+import 'package:kursova/presentation/screens/side_bar/widgets/side_bar_open_button.dart';
 import 'package:kursova/presentation/widgets/custom_popups/check_and_show_no_internet_connection_pop_up.dart';
 import 'package:kursova/presentation/widgets/custom_popups/show_notification_popup.dart';
-import 'package:kursova/presentation/widgets/custom_snackbar/sbow_custom_snack_bar.dart';
+import 'package:kursova/presentation/widgets/custom_snackbar/show_custom_error_snack_bar.dart';
 import 'package:kursova/resources/app_colors.dart';
+import 'package:kursova/resources/app_ui_constants.dart';
 import 'package:kursova/resources/graphics/resources.dart';
 import 'package:latlong2/latlong.dart' as latlong;
 
@@ -29,14 +35,46 @@ class MapScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool showCustomSideBar = kIsWeb &&
+        MediaQuery.of(context).size.width >
+            AppUIConstants.maximalWidthToShowDrawer;
+
     const double sidebarWidth = 380;
     final double screenHeight = MediaQuery.of(context).size.height;
-    final double sidebarHeight = screenHeight * 0.88;
+    final double sidebarHeight =
+        screenHeight < 1000 ? screenHeight * 0.9 : 900;
 
     const double markerSize = 80;
 
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
+      // A drawer is shown on mobile platforms or when web window is to narrow
+      drawer: Drawer(
+        backgroundColor: AppColors.backgroundColor,
+        width: sidebarWidth,
+        child: BlocBuilder<LocationsBloc, LocationsState>(
+          builder: (context, locationsState) {
+            return BlocBuilder<RouteBloc, RouteState>(
+              builder: (context, routeState) {
+                if (routeState is RouteLoaded) {
+                  return RouteDetailsSideBarContent(
+                    padding: AppUIConstants.sideBarMenuPaddings,
+                  );
+                }
+                if (routeState is RouteLoading) {
+                  return LoadingSideBarContent(
+                    padding: AppUIConstants.sideBarMenuPaddings,
+                  );
+                } else {
+                  return ChooseLocationsSideBarContent(
+                    padding: AppUIConstants.sideBarMenuPaddings,
+                  );
+                }
+              },
+            );
+          },
+        ),
+      ),
       body: MultiBlocListener(
         listeners: [
           BlocListener<LocationsBloc, LocationsState>(
@@ -56,12 +94,12 @@ class MapScreen extends StatelessWidget {
                 );
               }
 
-              // Shows that user has reached locations limit
+              // Shows that user has reached current locations limit
               if (locationState is LocationsReachedCurrentLocationsLimit) {
                 showNotificationPopUp(
                   context: context,
-                  popUpTitle: 'currentLocationsLimit'.tr(context: context),
-                  popUpText: 'currentLocationsLimitText'.tr(context: context),
+                  title: 'currentLocationsLimit'.tr(context: context),
+                  text: 'currentLocationsLimitText'.tr(context: context),
                   buttonText: 'ok'.tr(context: context),
                 );
               }
@@ -71,8 +109,8 @@ class MapScreen extends StatelessWidget {
                   locationState.showMessage) {
                 showNotificationPopUp(
                   context: context,
-                  popUpTitle: 'locationsLimit'.tr(context: context),
-                  popUpText: 'locationsLimitText'.tr(
+                  title: 'locationsLimit'.tr(context: context),
+                  text: 'locationsLimitText'.tr(
                     context: context,
                     args: [AppConstants.locationsLimit.toString()],
                   ),
@@ -80,17 +118,17 @@ class MapScreen extends StatelessWidget {
                 );
               }
 
-              // Shows that adding location failed. I could have been current location,
+              // Shows adding location failure message. It could have been current location,
               // location from text field or location from map.
               if (locationState is LocationsAddingLocationFailure) {
-                showCustomSnackbar(
+                showCustomErrorSnackbar(
                   context: context,
                   title: 'addingLocationFailure'.tr(context: context),
                   text: 'addingLocationFailureText'.tr(context: context),
                 );
               } else if (locationState
                   is LocationsAddingCurrentLocationFailure) {
-                showCustomSnackbar(
+                showCustomErrorSnackbar(
                   context: context,
                   title: 'addingCurrentLocationFailure'.tr(context: context),
                   text: 'addingCurrentLocationFailureText'.tr(context: context),
@@ -101,8 +139,9 @@ class MapScreen extends StatelessWidget {
           ),
           BlocListener<RouteBloc, RouteState>(
             listener: (context, routeState) {
+              // Shows creating route failure message
               if (routeState is RouteLoadingRouteFaillure) {
-                showCustomSnackbar(
+                showCustomErrorSnackbar(
                   context: context,
                   title: 'creatingRouteFailure'.tr(context: context),
                   text: 'creatingRouteFailureText'.tr(context: context),
@@ -114,14 +153,16 @@ class MapScreen extends StatelessWidget {
         ],
         child: Stack(
           children: [
+            // A map that takes all availablespace
             SizedBox(
               width: double.infinity,
               height: double.infinity,
               child: FlutterMap(
+                mapController: MapController(),
                 options: MapOptions(
+                  // An initial center is Kyiv
                   initialCenter: const latlong.LatLng(50.451226, 30.515041),
-                  initialZoom: 7,
-                  keepAlive: true,
+                  initialZoom: 15,
                   cameraConstraint: CameraConstraint.contain(
                     bounds: LatLngBounds(
                       const latlong.LatLng(-90, 180),
@@ -158,13 +199,14 @@ class MapScreen extends StatelessWidget {
                     );
                   },
                 ),
-                mapController: MapController(),
                 children: [
                   TileLayer(
                     urlTemplate:
                         'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                     userAgentPackageName: 'dev.fleaflet.flutter_map.example',
                   ),
+
+                  // A created route
                   BlocBuilder<RouteBloc, RouteState>(
                     builder: (context, routeState) {
                       return PolylineLayer(
@@ -181,6 +223,8 @@ class MapScreen extends StatelessWidget {
                       );
                     },
                   ),
+
+                  // All locations in the list
                   BlocBuilder<MapMarkersBloc, MapMarkersState>(
                     builder: (context, mapMarkersState) {
                       final locationMarkers = mapMarkersState.locationMarkers;
@@ -219,21 +263,42 @@ class MapScreen extends StatelessWidget {
                 ],
               ),
             ),
+
+            // A language dropdown has always the same position on all platforms
             const Positioned(
               right: 15,
               top: 15,
               child: LanguageDropdown(),
             ),
-            BlocProvider(
-              create: (context) => SideBarMenuVisibilityCubit(),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: SideBar(
-                  sidebarWidth: sidebarWidth,
-                  sidebarHeight: sidebarHeight,
+
+            // Is shown in web when window is wider then AppUIConstants.maximalWidthToShowDrawer
+            if (showCustomSideBar)
+              BlocProvider(
+                create: (context) => SideBarMenuVisibilityCubit(),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: SideBar(
+                    sidebarWidth: sidebarWidth,
+                    sidebarHeight: sidebarHeight,
+                  ),
                 ),
               ),
-            ),
+
+            // Is shown when not custom side bar is used
+            if (!showCustomSideBar)
+              Positioned(
+                left: 0,
+                top: 15,
+                child: Builder(
+                  builder: (context) {
+                    return SideBarOpenButton(
+                      onTap: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                    );
+                  },
+                ),
+              ),
           ],
         ),
       ),

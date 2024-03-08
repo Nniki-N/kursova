@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// Corner priority is [topRight] -> [bottomRight] -> [bottomLeft] -> [topLeft]
-/// If no corner is selected, [topRight] is selected by default
+/// A square with one inner corner radius.
+/// 
+/// By default the inner radius is in the right top corner.
+/// The corner is selected by  [topRight], [bottomRight], [bottomLeft], [topLeft] and has such priority: [topRight] -> [bottomRight] -> [bottomLeft] -> [topLeft].
 class RectWithOneInnerRadius extends StatelessWidget {
   final double size;
   final double radius;

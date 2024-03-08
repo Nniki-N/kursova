@@ -7,7 +7,9 @@ import 'package:kursova/resources/app_colors.dart';
 import 'package:kursova/resources/app_typography.dart';
 
 class LanguageDropdown extends StatefulWidget {
-  const LanguageDropdown({super.key});
+  const LanguageDropdown({
+    super.key,
+  });
 
   @override
   State<LanguageDropdown> createState() => _LanguageDropdownState();
@@ -59,12 +61,12 @@ class _LanguageDropdownState extends State<LanguageDropdown> {
               color: AppColors.backgroundColor,
               borderRadius: BorderRadius.circular(6),
               boxShadow: [
-                BoxShadow(
-                  color: AppColors.mainDarkColor.withOpacity(0.25),
-                  blurRadius: 50,
-                  spreadRadius: 3,
-                )
-              ],
+                      BoxShadow(
+                        color: AppColors.mainDarkColor.withOpacity(0.25),
+                        blurRadius: 50,
+                        spreadRadius: 3,
+                      ),
+                    ],
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

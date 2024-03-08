@@ -5,7 +5,7 @@ import 'package:kursova/presentation/blocs/internet_status_bloc/internet_status_
 import 'package:kursova/presentation/blocs/internet_status_bloc/internet_status_state.dart';
 import 'package:kursova/presentation/widgets/custom_popups/show_notification_popup.dart';
 
-/// Shows pop up and returns true if there is no internetc connections.
+/// Shows pop up and returns true if there is no internet connections.
 bool checkAndShowNoInternetConnectionPopUp(BuildContext context) {
   final internetConnectionState =
       BlocProvider.of<InternetStatusBloc>(context).state;
@@ -13,8 +13,8 @@ bool checkAndShowNoInternetConnectionPopUp(BuildContext context) {
   if (internetConnectionState is InternetStatusDisconnected) {
     showNotificationPopUp(
       context: context,
-      popUpTitle: 'noInternetConnection'.tr(context: context),
-      popUpText: 'noInternetConnectionText'.tr(context: context),
+      title: 'noInternetConnection'.tr(context: context),
+      text: 'noInternetConnectionText'.tr(context: context),
       buttonText: 'ok'.tr(context: context),
     );
 

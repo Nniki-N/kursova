@@ -1,12 +1,13 @@
 
 import 'package:flutter/material.dart';
+import 'package:kursova/resources/app_ui_constants.dart';
 
 class SideBarHorizontalPaddingsContainer extends StatelessWidget {
   const SideBarHorizontalPaddingsContainer({
     super.key,
     required this.child,
-    this.leftPadding = 30,
-    this.rightPadding = 30,
+    this.leftPadding = AppUIConstants.sideBarMenuPaddings,
+    this.rightPadding = AppUIConstants.sideBarMenuPaddings,
   });
 
   final Widget child;

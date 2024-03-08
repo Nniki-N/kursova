@@ -4,7 +4,7 @@
     "howToUseThisService": "How to use this service",
     "howToUseThisServiceText": "Add locations that you want to be in created route and select route configuration.\n\nTo add locations you can:\n1. Click on the map.\n2. Click on “Add my current location” button. This will add location if current location is not already in the list.\n3. Input address of a location in the search field and location will be added if the address is correct.\n\nConfigure route creation:\n1. To create your own route, just order locations as you wish (you can drag them up and down).\n2. To create optimized one way route, just select start or/and end point.\n3. To create cycled route, just select corresponding option.",
     "search": "Search",
-    "addMyCurrentLocation": "Add my current location",
+    "myCurrentLocation": "My current location",
     "locations": "Locations",
     "findRoute": "Find route",
     "clearAllLocations": "Clear all locations",

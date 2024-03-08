@@ -20,49 +20,52 @@ class LoadingSideBarContent extends StatelessWidget {
     const double loadingAnimationSize = 71;
     const double loadingAnimationBorderWidth = 3;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SideBarHorizontalPaddingsContainer(
-          leftPadding: padding,
-          rightPadding: padding,
-          child: SideBarHeader(
-            headerTitle: 'route'.tr(context: context),
-          ),
-        ),
-        Expanded(
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Stack(
-                  children: [
-                    LoadingAnimationWidget.threeRotatingDots(
-                      color: AppColors.mainDarkColor,
-                      size: loadingAnimationSize,
-                    ),
-                    Positioned(
-                      top: loadingAnimationBorderWidth,
-                      left: loadingAnimationBorderWidth,
-                      child: LoadingAnimationWidget.threeRotatingDots(
-                        color: AppColors.mainColor,
-                        size: loadingAnimationSize -
-                            loadingAnimationBorderWidth * 2,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'creatingRoute'.tr(context: context),
-                  style: AppTypography.h3Style,
-                ),
-              ],
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: padding),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SideBarHorizontalPaddingsContainer(
+            leftPadding: padding,
+            rightPadding: padding,
+            child: SideBarHeader(
+              headerTitle: 'route'.tr(context: context),
             ),
           ),
-        ),
-      ],
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Stack(
+                    children: [
+                      LoadingAnimationWidget.threeRotatingDots(
+                        color: AppColors.mainDarkColor,
+                        size: loadingAnimationSize,
+                      ),
+                      Positioned(
+                        top: loadingAnimationBorderWidth,
+                        left: loadingAnimationBorderWidth,
+                        child: LoadingAnimationWidget.threeRotatingDots(
+                          color: AppColors.mainColor,
+                          size: loadingAnimationSize -
+                              loadingAnimationBorderWidth * 2,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'creatingRoute'.tr(context: context),
+                    style: AppTypography.h3Style,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

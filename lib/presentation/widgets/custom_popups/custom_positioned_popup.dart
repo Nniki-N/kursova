@@ -6,11 +6,13 @@ import 'package:kursova/resources/app_typography.dart';
 import 'package:kursova/resources/app_ui_constants.dart';
 import 'package:kursova/resources/graphics/resources.dart';
 
-// Right side has higher priority than left side
-// Bottom side has higher priority than top side
-
-// ignore: must_be_immutable
-class CustomPositionedHelpPopUp extends StatelessWidget {
+/// A popup that will be shown as positioned popup.
+/// 
+/// It has a mandatory pointer that is attached to bottom or top of the popup. By default the pointer is on top left side.
+/// 
+/// Postion of the pointer can be changed by setting [pointerTopRight] or [pointerBottomLeft] or [pointerBottomRight] to true.
+/// By selecting several sides for pointer, right side will have higher priority than left side and bottom side will have higher priority than top side.
+class CustomPositionedPopUp extends StatelessWidget {
   final double width;
   final double height;
   final double borderRadius;
@@ -19,13 +21,13 @@ class CustomPositionedHelpPopUp extends StatelessWidget {
   final Color borderColor;
   final Color backgroundColor;
   final double padding;
-  final String helpTitle;
-  final String helpText;
-  final bool helpPointerTopRight;
-  final bool helpPointerBottomLeft;
-  final bool helpPointerBottomRight;
+  final String title;
+  final String text;
+  final bool pointerTopRight;
+  final bool pointerBottomLeft;
+  final bool pointerBottomRight;
 
-  CustomPositionedHelpPopUp({
+  CustomPositionedPopUp({
     super.key,
     this.width = 450,
     this.height = 500,
@@ -35,11 +37,11 @@ class CustomPositionedHelpPopUp extends StatelessWidget {
     this.borderColor = AppColors.buttonBorderColor,
     this.backgroundColor = AppColors.popupBackgroundColor,
     this.padding = 20,
-    required this.helpTitle,
-    required this.helpText,
-    this.helpPointerTopRight = false,
-    this.helpPointerBottomLeft = false,
-    this.helpPointerBottomRight = false,
+    required this.title,
+    required this.text,
+    this.pointerTopRight = false,
+    this.pointerBottomLeft = false,
+    this.pointerBottomRight = false,
   });
 
   final GlobalKey globalKey = GlobalKey();
@@ -56,21 +58,21 @@ class CustomPositionedHelpPopUp extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         Positioned(
-          right: helpPointerTopRight || helpPointerBottomRight
+          right: pointerTopRight || pointerBottomRight
               ? pointerPostionX
               : null,
-          left: !(helpPointerTopRight || helpPointerBottomRight)
+          left: !(pointerTopRight || pointerBottomRight)
               ? pointerPostionX
               : null,
-          bottom: helpPointerBottomLeft || helpPointerBottomRight
+          bottom: pointerBottomLeft || pointerBottomRight
               ? pointerPostionY
               : null,
-          top: !(helpPointerBottomLeft || helpPointerBottomRight)
+          top: !(pointerBottomLeft || pointerBottomRight)
               ? pointerPostionY
               : null,
           child: RotatedBox(
             quarterTurns:
-                helpPointerBottomLeft || helpPointerBottomRight ? 2 : 0,
+                pointerBottomLeft || pointerBottomRight ? 2 : 0,
             child: CustomPaint(
               painter: TriangleWithTopRaiusPainter(),
               child: const SizedBox(
@@ -101,12 +103,14 @@ class CustomPositionedHelpPopUp extends StatelessWidget {
               top: padding,
               bottom: padding,
             ),
-            child: HelpPopUpContentColumn(
-              helpTitle: helpTitle,
-              helpText: helpText,
+            child: CustomPositionedPopUpContentColumn(
+              title: title,
+              text: text,
             ),
           ),
         ),
+
+        // Closes pop up.
         Positioned(
           top: padding,
           right: padding,
@@ -122,9 +126,6 @@ class CustomPositionedHelpPopUp extends StatelessWidget {
             borderWidth: 0,
             borderRadius: 4,
             onTap: () {
-              final RenderBox renderBox =
-                  globalKey.currentContext!.findRenderObject() as RenderBox;
-              print('renderBox.size.height ${renderBox.size.height}');
               Navigator.of(context).pop();
             },
           ),
@@ -134,15 +135,15 @@ class CustomPositionedHelpPopUp extends StatelessWidget {
   }
 }
 
-class HelpPopUpContentColumn extends StatelessWidget {
-  const HelpPopUpContentColumn({
+class CustomPositionedPopUpContentColumn extends StatelessWidget {
+  const CustomPositionedPopUpContentColumn({
     super.key,
-    required this.helpTitle,
-    required this.helpText,
+    required this.title,
+    required this.text,
   });
 
-  final String helpTitle;
-  final String helpText;
+  final String title;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +157,7 @@ class HelpPopUpContentColumn extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
           child: Text(
-            helpTitle,
+            title,
             maxLines: 2,
             softWrap: true,
             textDirection: TextDirection.ltr,
@@ -167,8 +168,8 @@ class HelpPopUpContentColumn extends StatelessWidget {
         DefaultTextStyle(
           style: AppTypography.mainTextStyle,
           child: Text(
-            helpText,
-            maxLines: 20,
+            text,
+            maxLines: 50,
             softWrap: true,
             textDirection: TextDirection.ltr,
             overflow: TextOverflow.ellipsis,

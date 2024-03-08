@@ -36,9 +36,9 @@ abstract class AppColors {
   static const Color fieldHintTextColor = Color(0xFF6B6B6B);
 
   // Snackbar
-  static const Color snackbarBackgroundColor = Color(0xFFE24B4B);
-  static const Color snackbarForegroundColor = Color(0xFF5E0C0C);
-  static const Color snackbarBorderColor = Color(0xFF791515);
+  static const Color snackbarErrorBackgroundColor = Color(0xFFE24B4B);
+  static const Color snackbarErrorForegroundColor = Color(0xFF5E0C0C);
+  static const Color snackbarErrorBorderColor = Color(0xFF791515);
   static const Color snackbarShadowColor = Color(0xFFE04444);
 
   // Popup

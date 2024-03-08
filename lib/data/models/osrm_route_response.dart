@@ -47,9 +47,9 @@ class Routes {
           ? []
           : List<Leg>.from(json['legs']!.map((x) => Leg.fromJson(x))),
       weightName: json['weight_name'],
-      weight: json['weight'],
-      duration: json['duration'],
-      distance: json['distance'],
+      weight: (json['weight'] as num).toDouble(),
+      duration: (json['duration'] as num).toDouble(),
+      distance: (json['distance'] as num).toDouble(),
     );
   }
 }
@@ -95,9 +95,9 @@ class Leg {
           ? []
           : List<dynamic>.from(json['steps']!.map((x) => x)),
       summary: json['summary'],
-      weight: json['weight'],
-      duration: json['duration'],
-      distance: json['distance'],
+      weight: (json['weight'] as num).toDouble(),
+      duration: (json['duration'] as num).toDouble(),
+      distance: (json['distance'] as num).toDouble(),
     );
   }
 }
@@ -118,7 +118,7 @@ class Waypoint {
   factory Waypoint.fromJson(Map<String, dynamic> json) {
     return Waypoint(
       hint: json['hint'],
-      distance: json['distance'],
+      distance: (json['distance'] as num).toDouble(),
       name: json['name'],
       location: json['location'] == null
           ? []

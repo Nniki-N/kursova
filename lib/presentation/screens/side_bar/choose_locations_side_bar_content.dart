@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart' as easy_localization;
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kursova/core/app_constants.dart';
 import 'package:kursova/core/utils/image_asset_path_formater.dart';
@@ -22,7 +23,7 @@ import 'package:kursova/presentation/screens/side_bar/widgets/side_bar_option_wi
 import 'package:kursova/presentation/widgets/custom_buttons/custom_icon_button.dart';
 import 'package:kursova/presentation/widgets/custom_buttons/custom_main_button.dart';
 import 'package:kursova/presentation/widgets/custom_buttons/custom_square_button_with_icon.dart';
-import 'package:kursova/presentation/widgets/custom_fields/custom_field.dart';
+import 'package:kursova/presentation/widgets/custom_fields/custom_search_field.dart';
 import 'package:kursova/presentation/widgets/custom_popups/check_and_show_no_internet_connection_pop_up.dart';
 import 'package:kursova/resources/app_colors.dart';
 import 'package:kursova/resources/app_typography.dart';
@@ -39,130 +40,171 @@ class ChooseLocationsSideBarContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData();
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SideBarHorizontalPaddingsContainer(
-          leftPadding: padding,
-          rightPadding: padding,
-          child: SideBarHeader(
-            headerTitle: 'chooseLocations'.tr(context: context),
-            headerInfoTitle: 'howToUseThisService'.tr(context: context),
-            headerInfoText: 'howToUseThisServiceText'.tr(context: context),
-          ),
+    // A side bar is fully scrollable to fit locations
+    if (MediaQuery.of(context).size.height < 630) {
+      return ListView(
+        padding: EdgeInsets.symmetric(vertical: padding),
+        shrinkWrap: true,
+        children: _contentListOfWidgets(
+          context: context,
+          isLocationsListScrollable: false,
         ),
-        const SizedBox(height: 25),
-        SideBarHorizontalPaddingsContainer(
-          leftPadding: padding,
-          rightPadding: padding,
-          child: CustomSearchField(
-            controller: textFieldController,
-            hintText: 'search'.tr(context: context),
-            buttonIconPath: Svgs.addIcon,
-            onTap: () {
-              if (checkAndShowNoInternetConnectionPopUp(context)) {
-                return;
-              }
+      );
+    }
 
-              final LocationsState locationsState =
-                  BlocProvider.of<LocationsBloc>(context).state;
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: padding),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: _contentListOfWidgets(
+          context: context,
+          isLocationsListScrollable: true,
+        ),
+      ),
+    );
+  }
 
-              if (locationsState is LocationsAddingLocation) {
-                return;
-              }
+  // A side bar content
+  List<Widget> _contentListOfWidgets({
+    required BuildContext context,
+    required bool isLocationsListScrollable,
+  }) {
+    return [
+      SideBarHorizontalPaddingsContainer(
+        leftPadding: padding,
+        rightPadding: padding,
+        child: SideBarHeader(
+          headerTitle: 'chooseLocations'.tr(context: context),
+          headerInfoTitle: 'howToUseThisService'.tr(context: context),
+          headerInfoText: 'howToUseThisServiceText'.tr(context: context),
+        ),
+      ),
+      const SizedBox(height: 25),
+      SideBarHorizontalPaddingsContainer(
+        leftPadding: padding,
+        rightPadding: padding,
+        child: CustomSearchField(
+          controller: textFieldController,
+          hintText: 'search'.tr(context: context),
+          buttonIconPath: Svgs.addIcon,
+          onTap: () {
+            if (checkAndShowNoInternetConnectionPopUp(context)) {
+              return;
+            }
 
-              final String fieldText = textFieldController.text;
+            final LocationsState locationsState =
+                BlocProvider.of<LocationsBloc>(context).state;
 
-              if (fieldText.trim().isNotEmpty) {
-                BlocProvider.of<LocationsBloc>(context).add(
-                  LocationsAddLocationByAddressRequested(
-                    address: fieldText,
-                    locationDataLang: context.locale.languageCode,
+            if (locationsState is LocationsAddingLocation) {
+              return;
+            }
+
+            final String fieldText = textFieldController.text;
+
+            if (fieldText.trim().isNotEmpty) {
+              BlocProvider.of<LocationsBloc>(context).add(
+                LocationsAddLocationByAddressRequested(
+                  address: fieldText,
+                  locationDataLang: context.locale.languageCode,
+                ),
+              );
+
+              textFieldController.clear();
+            }
+          },
+        ),
+      ),
+      const SizedBox(height: 15),
+
+      // An add current location buttion is shown only if the location service is anabled
+      BlocBuilder<PermissionBloc, PermissionState>(
+        builder: (context, permissionState) {
+          return !permissionState.locationServiceIsEnabled
+              ? SizedBox.fromSize()
+              : SideBarHorizontalPaddingsContainer(
+                  leftPadding: padding,
+                  rightPadding: padding,
+                  child: CustomMainButton(
+                    onTap: () {
+                      if (checkAndShowNoInternetConnectionPopUp(context)) {
+                        return;
+                      }
+
+                      final LocationsState locationsState =
+                          BlocProvider.of<LocationsBloc>(context).state;
+
+                      if (locationsState is LocationsAddingLocation) {
+                        return;
+                      }
+
+                      BlocProvider.of<LocationsBloc>(context).add(
+                        LocationsAddCurrentUserLocationRequested(
+                          locationDataLang: context.locale.languageCode,
+                        ),
+                      );
+                    },
+                    text: 'myCurrentLocation'.tr(context: context),
+                    height: 44,
+                    iconPath: Svgs.locationIcon,
+                    backgroundColor: Colors.transparent,
+                    fontSize: 18,
+                    fontWeight: FontWeight.normal,
                   ),
                 );
+        },
+      ),
+      BlocBuilder<PermissionBloc, PermissionState>(
+        builder: (context, permissionState) {
+          return !permissionState.locationServiceIsEnabled
+              ? SizedBox.fromSize()
+              : const SizedBox(height: 30);
+        },
+      ),
 
-                textFieldController.clear();
-              }
-            },
-          ),
-        ),
-        const SizedBox(height: 15),
-        BlocBuilder<PermissionBloc, PermissionState>(
-          builder: (context, permissionState) {
-            return !permissionState.locationServiceIsEnabled
-                ? SizedBox.fromSize()
-                : SideBarHorizontalPaddingsContainer(
-                    leftPadding: padding,
-                    rightPadding: padding,
-                    child: CustomMainButton(
-                      onTap: () {
-                        if (checkAndShowNoInternetConnectionPopUp(context)) {
-                          return;
-                        }
-
-                        final LocationsState locationsState =
-                            BlocProvider.of<LocationsBloc>(context).state;
-
-                        if (locationsState is LocationsAddingLocation) {
-                          return;
-                        }
-
-                        BlocProvider.of<LocationsBloc>(context).add(
-                          LocationsAddCurrentUserLocationRequested(
-                            locationDataLang: context.locale.languageCode,
-                          ),
-                        );
-                      },
-                      text: 'addMyCurrentLocation'.tr(context: context),
-                      height: 44,
-                      iconPath: Svgs.locationIcon,
-                      backgroundColor: Colors.transparent,
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  );
+      SideBarHorizontalPaddingsContainer(
+        leftPadding: padding,
+        rightPadding: padding,
+        child: BlocBuilder<LocationsBloc, LocationsState>(
+          builder: (context, locationsState) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'locations'.tr(context: context),
+                  style: AppTypography.mainTextStyle.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  '${locationsState.locations.length} / ${AppConstants.locationsLimit}',
+                  style: AppTypography.mainTextStyle.copyWith(
+                    color: AppColors.darkGrayTextColor,
+                  ),
+                ),
+              ],
+            );
           },
         ),
-        BlocBuilder<PermissionBloc, PermissionState>(
-          builder: (context, permissionState) {
-            return !permissionState.locationServiceIsEnabled
-                ? SizedBox.fromSize()
-                : const SizedBox(height: 30);
-          },
-        ),
-        SideBarHorizontalPaddingsContainer(
-          leftPadding: padding,
-          rightPadding: padding,
-          child: BlocBuilder<LocationsBloc, LocationsState>(
+      ),
+      const SizedBox(height: 20),
+      BlocBuilder<RouteBloc, RouteState>(
+        builder: (context, routeState) {
+          return BlocBuilder<LocationsBloc, LocationsState>(
             builder: (context, locationsState) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'locations'.tr(context: context),
-                    style: AppTypography.mainTextStyle.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+              if (isLocationsListScrollable) {
+                return Expanded(
+                  child: LocationsReorderableListView(
+                    padding: padding,
+                    locations: locationsState.locations,
+                    isAddingNewLocation:
+                        locationsState is LocationsAddingLocation,
+                    showStart: routeState.withStartPoint,
+                    showEnd: routeState.withEndPoint,
+                    isScrollable: isLocationsListScrollable,
                   ),
-                  Text(
-                    '${locationsState.locations.length} / ${AppConstants.locationsLimit}',
-                    style: AppTypography.mainTextStyle.copyWith(
-                      color: AppColors.darkGrayTextColor,
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 20),
-        BlocBuilder<RouteBloc, RouteState>(
-          builder: (context, routeState) {
-            return BlocBuilder<LocationsBloc, LocationsState>(
-              builder: (context, locationsState) {
+                );
+              } else {
                 return LocationsReorderableListView(
                   padding: padding,
                   locations: locationsState.locations,
@@ -170,73 +212,74 @@ class ChooseLocationsSideBarContent extends StatelessWidget {
                       locationsState is LocationsAddingLocation,
                   showStart: routeState.withStartPoint,
                   showEnd: routeState.withEndPoint,
+                  isScrollable: isLocationsListScrollable,
                 );
-              },
+              }
+            },
+          );
+        },
+      ),
+      const SizedBox(height: 25),
+      SideBarHorizontalPaddingsContainer(
+        leftPadding: padding,
+        rightPadding: padding,
+        child: BlocBuilder<RouteBloc, RouteState>(
+          builder: (context, routeState) {
+            return AdvancedOptions(
+              showOptions: routeState.cycledRoute ||
+                  routeState.withEndPoint ||
+                  routeState.withStartPoint,
             );
           },
         ),
-        const SizedBox(height: 25),
-        SideBarHorizontalPaddingsContainer(
-          leftPadding: padding,
-          rightPadding: padding,
-          child: BlocBuilder<RouteBloc, RouteState>(
-            builder: (context, routeState) {
-              return AdvancedOptions(
-                showOptions: routeState.cycledRoute ||
-                    routeState.withEndPoint ||
-                    routeState.withStartPoint,
-              );
-            },
-          ),
+      ),
+      const SizedBox(height: 15),
+      SideBarHorizontalPaddingsContainer(
+        leftPadding: padding,
+        rightPadding: padding,
+        child: CustomMainButton(
+          onTap: () {
+            if (checkAndShowNoInternetConnectionPopUp(context)) {
+              return;
+            }
+
+            final List<Location> locations =
+                BlocProvider.of<LocationsBloc>(context).state.locations;
+
+            BlocProvider.of<RouteBloc>(context).add(
+              RouteFindRouteRequested(locations: locations),
+            );
+          },
+          text: 'findRoute'.tr(context: context),
         ),
-        const SizedBox(height: 15),
-        SideBarHorizontalPaddingsContainer(
-          leftPadding: padding,
-          rightPadding: padding,
-          child: CustomMainButton(
-            onTap: () {
-              if (checkAndShowNoInternetConnectionPopUp(context)) {
-                return;
-              }
+      ),
+      const SizedBox(height: 15),
+      SideBarHorizontalPaddingsContainer(
+        leftPadding: padding,
+        rightPadding: padding,
+        child: CustomMainButton(
+          onTap: () {
+            BlocProvider.of<LocationsBloc>(context).add(
+              const LocationsClearLocationsRequested(),
+            );
 
-              final List<Location> locations =
-                  BlocProvider.of<LocationsBloc>(context).state.locations;
+            BlocProvider.of<MapMarkersBloc>(context).add(
+              const MapMarkersClearMarkersRequested(),
+            );
 
-              BlocProvider.of<RouteBloc>(context).add(
-                RouteFindRouteRequested(locations: locations),
-              );
-            },
-            text: 'findRoute'.tr(context: context),
-          ),
+            BlocProvider.of<RouteBloc>(context).add(
+              const RouteConfigureRouteRequested(
+                cycledRoute: false,
+                withEndPoint: false,
+                withStartPoint: false,
+              ),
+            );
+          },
+          text: 'clearAllLocations'.tr(context: context),
+          backgroundColor: Colors.transparent,
         ),
-        const SizedBox(height: 15),
-        SideBarHorizontalPaddingsContainer(
-          leftPadding: padding,
-          rightPadding: padding,
-          child: CustomMainButton(
-            onTap: () {
-              BlocProvider.of<LocationsBloc>(context).add(
-                const LocationsClearLocationsRequested(),
-              );
-
-              BlocProvider.of<MapMarkersBloc>(context).add(
-                const MapMarkersClearMarkersRequested(),
-              );
-
-              BlocProvider.of<RouteBloc>(context).add(
-                const RouteConfigureRouteRequested(
-                  cycledRoute: false,
-                  withEndPoint: false,
-                  withStartPoint: false,
-                ),
-              );
-            },
-            text: 'clearAllLocations'.tr(context: context),
-            backgroundColor: Colors.transparent,
-          ),
-        ),
-      ],
-    );
+      ),
+    ];
   }
 }
 
@@ -247,6 +290,7 @@ class LocationsReorderableListView extends StatefulWidget {
   final bool showStart;
   final bool showEnd;
   final double spaceBetweenItems;
+  final bool isScrollable;
 
   const LocationsReorderableListView({
     super.key,
@@ -256,6 +300,7 @@ class LocationsReorderableListView extends StatefulWidget {
     required this.showStart,
     required this.showEnd,
     this.spaceBetweenItems = 24,
+    required this.isScrollable,
   });
 
   @override
@@ -281,84 +326,84 @@ class _LocationsReorderableListViewState
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ReorderableListView.builder(
-        buildDefaultDragHandles: false,
-        padding: EdgeInsets.only(
-          right: widget.padding,
-          left: widget.padding,
-        ),
-        itemBuilder: (context, index) {
-          // Show that location is loading
-          if (index == locations.length && widget.isAddingNewLocation) {
-            final height = MeasureUtil.measureWidget(Text(
-              '',
-              textDirection: TextDirection.ltr,
-              style: AppTypography.mainTextStyle,
-            )).height;
+    return ReorderableListView.builder(
+      physics:
+          !widget.isScrollable ? const NeverScrollableScrollPhysics() : null,
+      shrinkWrap: !widget.isScrollable,
+      buildDefaultDragHandles: false,
+      padding: EdgeInsets.only(
+        right: widget.padding,
+        left: widget.padding,
+      ),
+      itemBuilder: (context, index) {
+        // Shows that location is loading
+        if (index == locations.length && widget.isAddingNewLocation) {
+          final height = MeasureUtil.measureWidget(Text(
+            '',
+            textDirection: TextDirection.ltr,
+            style: AppTypography.mainTextStyle,
+          )).height;
 
-            return Row(
-              key: const ValueKey('loading_indicator'),
-              children: [
-                Container(
-                  margin: EdgeInsets.only(
-                    top: index == 0 ? 2 : widget.spaceBetweenItems + 2,
-                  ),
-                  width: 130,
-                  height: height,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: AppColors.lightGrayTextColor.withOpacity(0.15),
-                  ),
+          return Row(
+            key: const ValueKey('loading_indicator'),
+            children: [
+              Container(
+                margin: EdgeInsets.only(
+                  top: index == 0 ? 2 : widget.spaceBetweenItems + 2,
                 ),
-              ],
-            );
+                width: 130,
+                height: height,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: AppColors.lightGrayTextColor.withOpacity(0.15),
+                ),
+              ),
+            ],
+          );
+        }
+
+        return ReorderableDragStartListener(
+          key: ValueKey(locations[index].uid),
+          index: index,
+          child: SideBarLocationsListItem(
+            location: locations[index],
+            isLast: index == locations.length - 1,
+            isFirst: index == 0,
+            showStart: widget.showStart,
+            showEnd: widget.showEnd,
+            itemVerticalPaddings: widget.spaceBetweenItems / 2,
+          ),
+        );
+      },
+      proxyDecorator: (child, index, animation) {
+        return AnimatedBuilder(
+          animation: animation,
+          builder: (context, child) => Material(
+            color: AppColors.backgroundColor,
+            child: child,
+          ),
+          child: child,
+        );
+      },
+      itemCount:
+          widget.isAddingNewLocation ? locations.length + 1 : locations.length,
+      onReorder: (oldIndex, newIndex) {
+        setState(() {
+          if (oldIndex < newIndex) {
+            newIndex -= 1;
           }
 
-          return ReorderableDragStartListener(
-            key: ValueKey(locations[index].uid),
-            index: index,
-            child: SideBarLocationsListItem(
-              location: locations[index],
-              isLast: index == locations.length - 1,
-              isFirst: index == 0,
-              showStart: widget.showStart,
-              showEnd: widget.showEnd,
-              itemVerticalPaddings: widget.spaceBetweenItems / 2,
-            ),
-          );
-        },
-        proxyDecorator: (child, index, animation) {
-          return AnimatedBuilder(
-            animation: animation,
-            builder: (context, child) => Material(
-              color: AppColors.backgroundColor,
-              child: child,
-            ),
-            child: child,
-          );
-        },
-        itemCount: widget.isAddingNewLocation
-            ? locations.length + 1
-            : locations.length,
-        onReorder: (oldIndex, newIndex) {
-          setState(() {
-            if (oldIndex < newIndex) {
-              newIndex -= 1;
-            }
+          final Location location = locations.removeAt(oldIndex);
+          locations.insert(newIndex, location);
+        });
 
-            final Location location = locations.removeAt(oldIndex);
-            locations.insert(newIndex, location);
-          });
-
-          BlocProvider.of<LocationsBloc>(context).add(
-            LocationsMoveOneLocationInOrderRequested(
-              oldIndex: oldIndex,
-              newIndex: newIndex,
-            ),
-          );
-        },
-      ),
+        BlocProvider.of<LocationsBloc>(context).add(
+          LocationsMoveOneLocationInOrderRequested(
+            oldIndex: oldIndex,
+            newIndex: newIndex,
+          ),
+        );
+      },
     );
   }
 }

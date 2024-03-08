@@ -6,17 +6,15 @@ import 'package:kursova/resources/app_ui_constants.dart';
 
 typedef DialogOptionsBuilder<T> = Map<String, T?> Function();
 
-/// A custom basic method to show dialog popup.
-///
-/// [popUpTitle] is a text that is shown as a title of a dialog popup.
-///
-/// [popUpText] is a text that is shown as a text of a dialog popup.
-///
+/// A custom basic method to show a dialog popup.
+/// 
 /// [dialogOptionsBuilder] is a map of names of buttons and values that they return.
+/// 
+/// [barrierDismissible] sets if the popup can be closed only by clicking on buttons or also by clicking on the background.
 Future<T?> showGenericPopUp<T>({
   required BuildContext context,
-  required String popUpTitle,
-  required String popUpText,
+  required String title,
+  required String text,
   required DialogOptionsBuilder dialogOptionsBuilder,
   required bool barrierDismissible,
   double buttonsWidth = double.infinity,
@@ -62,17 +60,18 @@ Future<T?> showGenericPopUp<T>({
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                popUpTitle,
+                title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 softWrap: true,
+                textAlign: TextAlign.center,
                 style: AppTypography.h1Style,
               ),
               const SizedBox(height: 20),
               const PopUpSeparator(),
               const SizedBox(height: 15),
               Text(
-                popUpText,
+                text,
                 maxLines: 10,
                 overflow: TextOverflow.ellipsis,
                 softWrap: true,
