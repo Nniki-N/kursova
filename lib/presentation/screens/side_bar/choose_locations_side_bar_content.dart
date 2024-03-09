@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart' as easy_localization;
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kursova/core/app_constants.dart';
 import 'package:kursova/core/utils/image_asset_path_formater.dart';

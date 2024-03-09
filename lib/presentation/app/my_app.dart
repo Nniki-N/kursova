@@ -26,13 +26,15 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => RouteBloc(
-            routeRepository: getIt.get(),
+            findRouteUseCase: getIt.get(),
             logger: getIt.get(),
           ),
         ),
         BlocProvider(
           create: (context) => LocationsBloc(
-            locationRepository: getIt.get(),
+            retrieveCurrentLocationUseCase: getIt.get(),
+            retrieveLocationByAddresssUseCase: getIt.get(),
+            retrieveLocationByCoordinatesUseCase: getIt.get(),
             logger: getIt.get(),
           ),
         ),

@@ -162,7 +162,7 @@ class MapScreen extends StatelessWidget {
                 options: MapOptions(
                   // An initial center is Kyiv
                   initialCenter: const latlong.LatLng(50.451226, 30.515041),
-                  initialZoom: 15,
+                  initialZoom: 6,
                   cameraConstraint: CameraConstraint.contain(
                     bounds: LatLngBounds(
                       const latlong.LatLng(-90, 180),

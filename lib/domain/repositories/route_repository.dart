@@ -1,4 +1,4 @@
-import 'package:kursova/core/errors/route_repository_exception.dart';
+import 'package:kursova/core/errors/route_exception.dart';
 import 'package:kursova/domain/entities/location.dart';
 import 'package:kursova/domain/entities/route.dart';
 
@@ -10,11 +10,11 @@ abstract class RouteRepository {
   ///
   /// Returns [Route] if request was successful.
   ///
-  /// Throws [LocationsLackRouteRepositoryException] if locations list is empty.
+  /// Throws [LocationsLackRouteException] if locations list is empty.
   ///
-  /// Throws [EmptyRoutesResponseRouteRepositoryException] if no routes were returned.
+  /// Throws [EmptyRoutesResponseRouteException] if no routes were returned.
   ///
-  /// Throws [NotOptimizedRouteRetrievingRouteRepositoryException] if any other error occurs.
+  /// Throws [NotOptimizedRouteRetrievingRouteException] if any other error occurs.
   Future<Route> retrieveNotOptimizedRouteBetweenLocations({
     required List<Location> orderedLocations,
   });
@@ -30,13 +30,13 @@ abstract class RouteRepository {
   /// 
   /// Returns [Route] if request was successful.
   ///
-  /// Throws [LocationsLackRouteRepositoryException] if locations list is empty.
+  /// Throws [LocationsLackRouteException] if locations list is empty.
   /// 
   /// Throws [OptimizedParametersCombinationOsrmException] if all route parameters were set to false.
   ///
-  /// Throws [EmptyRoutesResponseRouteRepositoryException] if no routes were returned.
+  /// Throws [EmptyRoutesResponseRouteException] if no routes were returned.
   ///
-  /// Throws [NotOptimizedRouteRetrievingRouteRepositoryException] if any other error occurs.
+  /// Throws [NotOptimizedRouteRetrievingRouteException] if any other error occurs.
   Future<Route> retrieveOptimizedRouteBetweenLocations({
     required List<Location> locations,
     required bool withStartPoint,

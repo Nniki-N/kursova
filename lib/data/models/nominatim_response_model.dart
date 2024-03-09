@@ -1,4 +1,4 @@
-class NominatimResponse {
+class NominatimResponseModel {
   final String? city;
   final String? neighbourhood;
   final String? road;
@@ -7,7 +7,7 @@ class NominatimResponse {
   final double latitude;
   final double longitude;
 
-  NominatimResponse({
+  NominatimResponseModel({
     required this.city,
     required this.neighbourhood,
     required this.road,

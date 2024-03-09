@@ -1,10 +1,10 @@
 import 'package:kursova/core/utils/exception_util.dart';
 
-abstract class RouteRepositoryException implements Exception {
+abstract class RouteException implements Exception {
   final String message;
   final StackTrace? stackTrace;
 
-  RouteRepositoryException({
+  RouteException({
     required this.message,
     this.stackTrace,
   });
@@ -13,8 +13,8 @@ abstract class RouteRepositoryException implements Exception {
   String toString() => message;
 }
 
-class LocationsLackRouteRepositoryException extends RouteRepositoryException {
-  LocationsLackRouteRepositoryException({
+class LocationsLackRouteException extends RouteException {
+  LocationsLackRouteException({
     String? messageDetails,
     StackTrace? stackTrace,
   }) : super(
@@ -26,9 +26,9 @@ class LocationsLackRouteRepositoryException extends RouteRepositoryException {
         );
 }
 
-class EmptyRoutesResponseRouteRepositoryException
-    extends RouteRepositoryException {
-  EmptyRoutesResponseRouteRepositoryException({
+class EmptyRoutesResponseRouteException
+    extends RouteException {
+  EmptyRoutesResponseRouteException({
     String? messageDetails,
     StackTrace? stackTrace,
   }) : super(
@@ -40,9 +40,9 @@ class EmptyRoutesResponseRouteRepositoryException
         );
 }
 
-class NotOptimizedRouteRetrievingRouteRepositoryException
-    extends RouteRepositoryException {
-  NotOptimizedRouteRetrievingRouteRepositoryException({
+class NotOptimizedRouteRetrievingRouteException
+    extends RouteException {
+  NotOptimizedRouteRetrievingRouteException({
     String? messageDetails,
     StackTrace? stackTrace,
   }) : super(
@@ -55,7 +55,7 @@ class NotOptimizedRouteRetrievingRouteRepositoryException
 }
 
 class OptimizedParametersCombinationOsrmException
-    extends RouteRepositoryException {
+    extends RouteException {
   OptimizedParametersCombinationOsrmException({
     String? messageDetails,
     StackTrace? stackTrace,
@@ -68,9 +68,9 @@ class OptimizedParametersCombinationOsrmException
         );
 }
 
-class OptimizedRouteRetrievingRouteRepositoryException
-    extends RouteRepositoryException {
-  OptimizedRouteRetrievingRouteRepositoryException({
+class OptimizedRouteRetrievingRouteException
+    extends RouteException {
+  OptimizedRouteRetrievingRouteException({
     String? messageDetails,
     StackTrace? stackTrace,
   }) : super(

@@ -1,4 +1,5 @@
 import 'package:kursova/domain/entities/location.dart';
+import 'package:kursova/domain/enums/location_type.dart';
 import 'package:latlong2/latlong.dart';
 
 abstract class LocationRepository {
@@ -16,16 +17,7 @@ abstract class LocationRepository {
   /// The uid is always randomly generated.
   Future<Location> retrieveLocationByCoordinates({
     required LatLng latLng,
-    String lang = 'en',
-  });
-
-  /// Retrieves current location data.
-  ///
-  /// Returns [Location] if request was successful and null if not.
-  ///
-  /// The primaryLocationName of location is city/town if place if populated and 'Current location' otherwise.
-  /// The uid is always randomly generated.
-  Future<Location?> retrieveCurrentLocation({
+    LocationType returnedLocationType = LocationType.locationOnMap,
     String lang = 'en',
   });
 
@@ -35,8 +27,9 @@ abstract class LocationRepository {
   ///
   /// The primaryLocationName of location is city/town if place if populated or generated name like 'Point 3'.
   /// The uid is always randomly generated.
-  Future<Location?> retrieveLocationByAddress({
+  Future<Location> retrieveLocationByAddress({
     required String address,
+    LocationType returnedLocationType = LocationType.locationFromSearch,
     String lang = 'en',
   });
 }

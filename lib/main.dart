@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:kursova/core/di/locator.dart';
 import 'package:kursova/presentation/app/my_app.dart';
 import 'package:kursova/presentation/blocs/app_bloc_observer.dart';
+import 'package:logger/logger.dart';
 
 Future<void> main() async {
   await runZonedGuarded(() async {
@@ -23,6 +24,10 @@ Future<void> main() async {
 
     runApp(const MyApp());
   }, (exception, stackTrace) async {
-    print('$exception, $stackTrace');
+    getIt.get<Logger>().e(
+          'Main guarded zone',
+          error: exception,
+          stackTrace: stackTrace,
+        );
   });
 }

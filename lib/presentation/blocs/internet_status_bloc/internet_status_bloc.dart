@@ -51,7 +51,7 @@ class InternetStatusBloc
       },
       onError: (exception, stackTrace) {
         _logger.e(
-          'InternetStatusBloc ${exception.runtimeType}',
+          'InternetStatusBloc ${exception.toString()}',
           error: exception,
           stackTrace: stackTrace,
         );

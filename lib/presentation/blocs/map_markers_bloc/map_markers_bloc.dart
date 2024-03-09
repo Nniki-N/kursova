@@ -57,7 +57,7 @@ class MapMarkersBloc extends Bloc<MapMarkersEvent, MapMarkersState> {
       emit(MapMarkersNotEmpty(locationMarkers: locationMarkers));
     } catch (exception, stackTrace) {
       _logger.e(
-        'MapBloc ${exception.runtimeType}',
+        'MapBloc ${exception.toString()}',
         error: exception,
         stackTrace: stackTrace,
       );

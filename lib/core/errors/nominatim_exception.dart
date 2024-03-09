@@ -13,26 +13,26 @@ abstract class NominatimException implements Exception {
   String toString() => message;
 }
 
-class AddressDataRequestByCoordinatesOsrmException extends NominatimException {
-  AddressDataRequestByCoordinatesOsrmException({
+class AddressDataRequestByCoordinatesNominatimException extends NominatimException {
+  AddressDataRequestByCoordinatesNominatimException({
     String? messageDetails,
     StackTrace? stackTrace,
   }) : super(
           message: ExceptionUtil.addDetailsToCustomMessage(
-            'Retrieving address data response by coordinates failed',
+            'Retrieving address data by coordinates failed',
             messageDetails,
           ),
           stackTrace: stackTrace,
         );
 }
 
-class AddressDataRequestByAddressOsrmException extends NominatimException {
-  AddressDataRequestByAddressOsrmException({
+class AddressDataRequestByAddressNominatimException extends NominatimException {
+  AddressDataRequestByAddressNominatimException({
     String? messageDetails,
     StackTrace? stackTrace,
   }) : super(
           message: ExceptionUtil.addDetailsToCustomMessage(
-            'Retrieving address data response by address failed',
+            'Retrieving address data by address failed',
             messageDetails,
           ),
           stackTrace: stackTrace,
@@ -46,7 +46,7 @@ class RetrievingAddressDataByCoordinatesNominatimException
     StackTrace? stackTrace,
   }) : super(
           message: ExceptionUtil.addDetailsToCustomMessage(
-            'Something happened while etrieving address data by coordinates',
+            'Something happened while retrieving address data by coordinates',
             messageDetails,
           ),
           stackTrace: stackTrace,
@@ -73,7 +73,7 @@ class EmptyAddressDataResponseNominatimException extends NominatimException {
     StackTrace? stackTrace,
   }) : super(
           message: ExceptionUtil.addDetailsToCustomMessage(
-            'Retrieved address data response is empty',
+            'Retrieved address data is empty',
             messageDetails,
           ),
           stackTrace: stackTrace,

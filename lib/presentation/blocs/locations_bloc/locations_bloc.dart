@@ -1,17 +1,27 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kursova/core/app_constants.dart';
+import 'package:kursova/core/errors/location_exception.dart';
 import 'package:kursova/domain/entities/location.dart';
 import 'package:kursova/domain/enums/location_type.dart';
-import 'package:kursova/domain/repositories/location_repository.dart';
+import 'package:kursova/domain/usecases/retrieve_current_location_usecase.dart';
+import 'package:kursova/domain/usecases/retrieve_location_by_address.dart';
+import 'package:kursova/domain/usecases/retrieve_location_by_coordinates_usecase.dart';
 import 'package:kursova/presentation/blocs/locations_bloc/locations_event.dart';
 import 'package:kursova/presentation/blocs/locations_bloc/locations_state.dart';
 import 'package:logger/logger.dart';
 
 class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
   LocationsBloc({
-    required LocationRepository locationRepository,
+    required RetrieveLocationByCoordinatesUseCase
+        retrieveLocationByCoordinatesUseCase,
+    required RetrieveCurrentLocationUseCase retrieveCurrentLocationUseCase,
+    required RetrieveLocationByAddresssUseCase
+        retrieveLocationByAddresssUseCase,
     required Logger logger,
-  })  : _locationRepository = locationRepository,
+  })  : _retrieveLocationByCoordinatesUseCase =
+            retrieveLocationByCoordinatesUseCase,
+        _retrieveCurrentLocationUseCase = retrieveCurrentLocationUseCase,
+        _retrieveLocationByAddresssUseCase = retrieveLocationByAddresssUseCase,
         _logger = logger,
         super(LocationsEmpty()) {
     on<LocationsAddNewLocationRequested>(_addNewLocation);
@@ -22,7 +32,10 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
     on<LocationsClearLocationsRequested>(_clearLocations);
   }
 
-  final LocationRepository _locationRepository;
+  final RetrieveLocationByCoordinatesUseCase
+      _retrieveLocationByCoordinatesUseCase;
+  final RetrieveCurrentLocationUseCase _retrieveCurrentLocationUseCase;
+  final RetrieveLocationByAddresssUseCase _retrieveLocationByAddresssUseCase;
   final Logger _logger;
 
   final int locationsLimit = 10;
@@ -39,15 +52,24 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
       emit(LocationsAddingLocation(locations: state.locations));
 
       final Location location =
-          await _locationRepository.retrieveLocationByCoordinates(
+          await _retrieveLocationByCoordinatesUseCase.execute(
         latLng: event.latLng,
-        lang: event.locationDataLang,
+        locationDataLang: event.locationDataLang,
+        startRetrievingLocationsFromFirstPoint: state.locations.isEmpty,
       );
 
       final List<Location> locations = List.from(state.locations);
       locations.add(location);
 
       emit(LocationsNotEmpty(locations: locations));
+    } on LocationException catch (exception) {
+      _logger.e(
+        'LocationsBloc ${exception.message}',
+        error: exception,
+        stackTrace: exception.stackTrace,
+      );
+
+      emit(LocationsAddingLocationFailure(locations: state.locations));
     } catch (exception, stackTrace) {
       _logger.e(
         'LocationsBloc ${exception.toString()}',
@@ -81,21 +103,26 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
 
       emit(LocationsAddingLocation(locations: state.locations));
 
-      final currentLocation = await _locationRepository.retrieveCurrentLocation(
-        lang: event.locationDataLang,
+      final currentLocation = await _retrieveCurrentLocationUseCase.execute(
+        locationDataLang: event.locationDataLang,
+        startRetrievingLocationsFromFirstPoint: state.locations.isEmpty,
       );
 
-      if (currentLocation != null) {
-        final List<Location> locations = List.from(state.locations);
-        locations.add(currentLocation);
+      final List<Location> locations = List.from(state.locations);
+      locations.add(currentLocation);
 
-        emit(LocationsNotEmpty(locations: locations));
-      } else {
-        emit(LocationsAddingCurrentLocationFailure(locations: state.locations));
-      }
+      emit(LocationsNotEmpty(locations: locations));
+    } on LocationException catch (exception) {
+      _logger.e(
+        'LocationsBloc ${exception.message}',
+        error: exception,
+        stackTrace: exception.stackTrace,
+      );
+
+      emit(LocationsAddingLocationFailure(locations: state.locations));
     } catch (exception, stackTrace) {
       _logger.e(
-        'LocationsBloc ${exception.runtimeType}',
+        'LocationsBloc ${exception.toString()}',
         error: exception,
         stackTrace: stackTrace,
       );
@@ -115,22 +142,27 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
 
       emit(LocationsAddingLocation(locations: state.locations));
 
-      final location = await _locationRepository.retrieveLocationByAddress(
+      final location = await _retrieveLocationByAddresssUseCase.execute(
         address: event.address,
-        lang: event.locationDataLang,
+        locationDataLang: event.locationDataLang,
+        startRetrievingLocationsFromFirstPoint: state.locations.isEmpty,
       );
 
-      if (location != null) {
-        final List<Location> locations = List.from(state.locations);
-        locations.add(location);
+      final List<Location> locations = List.from(state.locations);
+      locations.add(location);
 
-        emit(LocationsNotEmpty(locations: locations));
-      } else {
-        emit(LocationsAddingLocationFailure(locations: state.locations));
-      }
+      emit(LocationsNotEmpty(locations: locations));
+    } on LocationException catch (exception) {
+      _logger.e(
+        'LocationsBloc ${exception.message}',
+        error: exception,
+        stackTrace: exception.stackTrace,
+      );
+
+      emit(LocationsAddingLocationFailure(locations: state.locations));
     } catch (exception, stackTrace) {
       _logger.e(
-        'LocationsBloc ${exception.runtimeType}',
+        'LocationsBloc ${exception.toString()}',
         error: exception,
         stackTrace: stackTrace,
       );
@@ -147,20 +179,15 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
       final List<Location> locations = List.from(state.locations);
 
       if (locations.isEmpty) {
-        _locationRepository.resetRepository();
         return;
       }
 
       locations.removeWhere((location) => location.uid == event.uid);
 
-      if (locations.isEmpty) {
-        _locationRepository.resetRepository();
-      }
-
       emit(LocationsNotEmpty(locations: locations));
     } catch (exception, stackTrace) {
       _logger.e(
-        'LocationsBloc ${exception.runtimeType}',
+        'LocationsBloc ${exception.toString()}',
         error: exception,
         stackTrace: stackTrace,
       );
@@ -193,7 +220,7 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
       emit(LocationsNotEmpty(locations: locations));
     } catch (exception, stackTrace) {
       _logger.e(
-        'LocationsBloc ${exception.runtimeType}',
+        'LocationsBloc ${exception.toString()}',
         error: exception,
         stackTrace: stackTrace,
       );
@@ -206,7 +233,6 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
     LocationsClearLocationsRequested event,
     Emitter<LocationsState> emit,
   ) async {
-    _locationRepository.resetRepository();
     emit(LocationsEmpty());
   }
 

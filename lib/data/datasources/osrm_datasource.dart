@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:kursova/core/errors/osrm_exception.dart';
-import 'package:kursova/data/models/osrm_route_response.dart';
-import 'package:kursova/data/models/osrm_trip_response.dart';
+import 'package:kursova/data/models/osrm_route_response_model.dart';
+import 'package:kursova/data/models/osrm_trip_response_model.dart';
 import 'package:latlong2/latlong.dart';
 
 /// For use of the free OSRM API
@@ -16,10 +16,10 @@ class OsrmDatasource {
 
   /// Retrieves routes for vehicle between locations in order they are provided.
   ///
-  /// Returns [OsrmRouteResponse] if request was successful.
+  /// Returns [OsrmRouteResponseModel] if request was successful.
   ///
   /// Throws [RouteRequestOsrmException] if request failed and [RouteRetrievingOsrmException] if any other error occurs.
-  Future<OsrmRouteResponse> retrieveRouteBetweenLocations({
+  Future<OsrmRouteResponseModel> retrieveRouteBetweenLocations({
     required List<LatLng> orderedCoordinates,
   }) async {
     try {
@@ -46,18 +46,16 @@ class OsrmDatasource {
         final String data = await response.stream.bytesToString();
         final Map<String, dynamic> dataAsJson = json.decode(data);
 
-        return OsrmRouteResponse.fromJson(dataAsJson);
+        return OsrmRouteResponseModel.fromJson(dataAsJson);
       } else {
         throw RouteRequestOsrmException(
           messageDetails: 'response status code = ${response.statusCode}',
           stackTrace: StackTrace.current,
         );
       }
-    } on OsrmException catch (exception, stackTrace) {
-      print('$exception, $stackTrace 11111');
+    } on OsrmException {
       rethrow;
     } catch (exception, stackTrace) {
-      print('$exception, $stackTrace 22222');
       throw RouteRetrievingOsrmException(
         messageDetails: exception.toString(),
         stackTrace: stackTrace,
@@ -74,7 +72,7 @@ class OsrmDatasource {
   /// Returns [TripRequestOsrmException] if request was successful.
   ///
   /// Throws [TripRequestOsrmException] if request failed and [TripRetrievingOsrmException] if any other error occurs.
-  Future<OsrmTripResponse> retrieveTripRouteBetweenLocations({
+  Future<OsrmTripResponseModel> retrieveTripRouteBetweenLocations({
     required List<LatLng> coordinates,
     required bool withStartPoint,
     required bool withEndPoint,
@@ -108,8 +106,6 @@ class OsrmDatasource {
         },
       );
 
-      print('uri $uri');
-
       final http.Request request = http.Request('GET', uri);
       final http.StreamedResponse response = await request.send();
 
@@ -117,10 +113,8 @@ class OsrmDatasource {
         final String data = await response.stream.bytesToString();
         final Map<String, dynamic> dataAsJson = json.decode(data);
 
-        return OsrmTripResponse.fromJson(dataAsJson);
+        return OsrmTripResponseModel.fromJson(dataAsJson);
       } else {
-        print('response status code = ${response.statusCode}');
-
         throw TripRequestOsrmException(
           messageDetails: 'response status code = ${response.statusCode}',
           stackTrace: StackTrace.current,

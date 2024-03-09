@@ -30,7 +30,7 @@ class PermissionBloc extends Bloc<PermissionEvent, PermissionState> {
       ));
     } catch (exception, stackTrace) {
       _logger.e(
-        'PermissionBloc Exception',
+        'PermissionBloc ${exception.toString()}',
         error: exception,
         stackTrace: stackTrace,
       );

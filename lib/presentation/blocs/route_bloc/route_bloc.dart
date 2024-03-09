@@ -1,16 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kursova/core/errors/route_repository_exception.dart';
+import 'package:kursova/core/errors/route_exception.dart';
 import 'package:kursova/domain/entities/route.dart';
-import 'package:kursova/domain/repositories/route_repository.dart';
+import 'package:kursova/domain/usecases/find_route_usecase.dart';
 import 'package:kursova/presentation/blocs/route_bloc/Route_event.dart';
 import 'package:kursova/presentation/blocs/route_bloc/route_state.dart';
 import 'package:logger/logger.dart';
 
 class RouteBloc extends Bloc<RouteEvent, RouteState> {
   RouteBloc({
-    required RouteRepository routeRepository,
+    required FindRouteUseCase findRouteUseCase,
     required Logger logger,
-  })  : _routeRepository = routeRepository,
+  })  : _findRouteUseCase = findRouteUseCase,
         _logger = logger,
         super(RouteInitial()) {
     on<RouteFindRouteRequested>(_findRoute);
@@ -18,7 +18,7 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
     on<RouteRemoveRouteRequested>(_removeRoute);
   }
 
-  final RouteRepository _routeRepository;
+  final FindRouteUseCase _findRouteUseCase;
   final Logger _logger;
 
   Future<void> _findRoute(
@@ -36,21 +36,12 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
         cycledRoute: state.cycledRoute,
       ));
 
-      final Route route;
-
-      if (!state.cycledRoute && !state.withStartPoint && !state.withEndPoint) {
-        route =
-            await _routeRepository.retrieveNotOptimizedRouteBetweenLocations(
-          orderedLocations: event.locations,
-        );
-      } else {
-        route = await _routeRepository.retrieveOptimizedRouteBetweenLocations(
-          locations: event.locations,
-          withStartPoint: state.withStartPoint,
-          withEndPoint: state.withEndPoint,
-          roundTrip: state.cycledRoute,
-        );
-      }
+      final Route route = await _findRouteUseCase.execute(
+        locations: event.locations,
+        withStartPoint: state.withStartPoint,
+        withEndPoint: state.withEndPoint,
+        cycledRoute: state.cycledRoute,
+      );
 
       emit(RouteLoaded(
         route: route,
@@ -58,11 +49,11 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
         withEndPoint: state.withEndPoint,
         cycledRoute: state.cycledRoute,
       ));
-    } on RouteRepositoryException catch (exception, stackTrace) {
+    } on RouteException catch (exception) {
       _logger.e(
         'RouteBloc ${exception.message}',
         error: exception,
-        stackTrace: stackTrace,
+        stackTrace: exception.stackTrace,
       );
 
       emit(RouteLoadingRouteFaillure(
@@ -72,7 +63,7 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
       ));
     } catch (exception, stackTrace) {
       _logger.e(
-        'RouteBloc ${exception.runtimeType}',
+        'RouteBloc ${exception.toString()}',
         error: exception,
         stackTrace: stackTrace,
       );

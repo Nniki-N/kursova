@@ -1,20 +1,20 @@
-class OsrmTripResponse {
-  OsrmTripResponse({
+class OsrmRouteResponseModel {
+  OsrmRouteResponseModel({
     required this.code,
-    required this.trips,
+    required this.routes,
     required this.waypoints,
   });
 
   final String code;
-  final List<Trip> trips;
+  final List<Routes> routes;
   final List<Waypoint> waypoints;
 
-  factory OsrmTripResponse.fromJson(Map<String, dynamic> json) {
-    return OsrmTripResponse(
+  factory OsrmRouteResponseModel.fromJson(Map<String, dynamic> json) {
+    return OsrmRouteResponseModel(
       code: json['code'],
-      trips: json['trips'] == null
+      routes: json['routes'] == null
           ? []
-          : List<Trip>.from(json['trips']!.map((x) => Trip.fromJson(x))),
+          : List<Routes>.from(json['routes']!.map((x) => Routes.fromJson(x))),
       waypoints: json['waypoints'] == null
           ? []
           : List<Waypoint>.from(
@@ -23,8 +23,8 @@ class OsrmTripResponse {
   }
 }
 
-class Trip {
-  Trip({
+class Routes {
+  Routes({
     required this.geometry,
     required this.legs,
     required this.weightName,
@@ -36,20 +36,20 @@ class Trip {
   final Geometry geometry;
   final List<Leg> legs;
   final String weightName;
-  final double weight;
-  final double duration;
-  final double distance;
+  final num weight;
+  final num duration;
+  final num distance;
 
-  factory Trip.fromJson(Map<String, dynamic> json) {
-    return Trip(
+  factory Routes.fromJson(Map<String, dynamic> json) {
+    return Routes(
       geometry: Geometry.fromJson(json['geometry']),
       legs: json['legs'] == null
           ? []
           : List<Leg>.from(json['legs']!.map((x) => Leg.fromJson(x))),
       weightName: json['weight_name'],
-      weight: (json['weight'] as num).toDouble(),
-      duration: (json['duration'] as num).toDouble(),
-      distance: (json['distance'] as num).toDouble(),
+      weight: json['weight'],
+      duration: json['duration'],
+      distance: json['distance'],
     );
   }
 }
@@ -85,9 +85,9 @@ class Leg {
 
   final List<dynamic> steps;
   final String summary;
-  final double weight;
-  final double duration;
-  final double distance;
+  final num weight;
+  final num duration;
+  final num distance;
 
   factory Leg.fromJson(Map<String, dynamic> json) {
     return Leg(
@@ -95,36 +95,30 @@ class Leg {
           ? []
           : List<dynamic>.from(json['steps']!.map((x) => x)),
       summary: json['summary'],
-      weight: (json['weight'] as num).toDouble(),
-      duration: (json['duration'] as num).toDouble(),
-      distance: (json['distance'] as num).toDouble(),
+      weight: json['weight'],
+      duration: json['duration'],
+      distance: json['distance'],
     );
   }
 }
 
 class Waypoint {
   Waypoint({
-    required this.waypointIndex,
-    required this.tripsIndex,
     required this.hint,
     required this.distance,
     required this.name,
     required this.location,
   });
 
-  final int waypointIndex;
-  final int tripsIndex;
   final String hint;
-  final double distance;
+  final num distance;
   final String name;
   final List<double> location;
 
   factory Waypoint.fromJson(Map<String, dynamic> json) {
     return Waypoint(
-      waypointIndex: json['waypoint_index'],
-      tripsIndex: json['trips_index'],
       hint: json['hint'],
-      distance: (json['distance'] as num).toDouble(),
+      distance: json['distance'],
       name: json['name'],
       location: json['location'] == null
           ? []

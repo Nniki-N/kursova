@@ -2,11 +2,13 @@ import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:kursova/core/errors/route_repository_exception.dart';
+import 'package:kursova/core/errors/osrm_exception.dart';
+import 'package:kursova/core/errors/route_exception.dart';
 import 'package:kursova/core/utils/route_util.dart';
 import 'package:kursova/data/datasources/osrm_datasource.dart';
-import 'package:kursova/data/models/osrm_route_response.dart' as osrm_route;
-import 'package:kursova/data/models/osrm_trip_response.dart' as osrm_trip;
+import 'package:kursova/data/models/osrm_route_response_model.dart'
+    as osrm_route;
+import 'package:kursova/data/models/osrm_trip_response_model.dart' as osrm_trip;
 import 'package:kursova/domain/entities/location.dart';
 import 'package:kursova/domain/entities/route.dart';
 import 'package:kursova/domain/repositories/route_repository.dart';
@@ -23,18 +25,18 @@ class OsrmRouteRepository extends RouteRepository {
   ///
   /// Returns [Route] if request was successful.
   ///
-  /// Throws [LocationsLackRouteRepositoryException] if locations list is empty.
+  /// Throws [LocationsLackRouteException] if locations list is empty.
   ///
-  /// Throws [EmptyRoutesResponseRouteRepositoryException] if no routes were returned.
+  /// Throws [EmptyRoutesResponseRouteException] if no routes were returned.
   ///
-  /// Throws [NotOptimizedRouteRetrievingRouteRepositoryException] if any other error occurs.
+  /// Throws [NotOptimizedRouteRetrievingRouteException] if any other error occurs.
   @override
   Future<Route> retrieveNotOptimizedRouteBetweenLocations({
     required List<Location> orderedLocations,
   }) async {
     try {
       if (orderedLocations.isEmpty || orderedLocations.length == 1) {
-        throw LocationsLackRouteRepositoryException(
+        throw LocationsLackRouteException(
           messageDetails: 'locations length = ${orderedLocations.length}',
           stackTrace: StackTrace.current,
         );
@@ -43,13 +45,13 @@ class OsrmRouteRepository extends RouteRepository {
       final List<LatLng> locationCoordinates =
           orderedLocations.map((location) => location.coordinate).toList();
 
-      final osrm_route.OsrmRouteResponse osrmRouteResponse =
+      final osrm_route.OsrmRouteResponseModel osrmRouteResponse =
           await _osrmDatasource.retrieveRouteBetweenLocations(
         orderedCoordinates: locationCoordinates,
       );
 
       if (osrmRouteResponse.routes.isEmpty) {
-        throw EmptyRoutesResponseRouteRepositoryException(
+        throw EmptyRoutesResponseRouteException(
           stackTrace: StackTrace.current,
         );
       }
@@ -63,7 +65,7 @@ class OsrmRouteRepository extends RouteRepository {
               .toList();
 
       final List<double> distances = osrmRouteResponse.routes.first.legs
-          .map((leg) => leg.distance)
+          .map((leg) => leg.distance.toDouble())
           .toList();
 
       final List<int> durations = osrmRouteResponse.routes.first.legs
@@ -90,10 +92,15 @@ class OsrmRouteRepository extends RouteRepository {
         totalDistanceInMeters: distances.reduce((a, b) => a + b),
         totalDurationsInSeconds: durations.reduce((a, b) => a + b),
       );
-    } on RouteRepositoryException {
+    } on RouteException {
       rethrow;
+    } on OsrmException catch (exception) {
+      throw NotOptimizedRouteRetrievingRouteException(
+        messageDetails: exception.message,
+        stackTrace: exception.stackTrace,
+      );
     } catch (exception, stackTrace) {
-      throw NotOptimizedRouteRetrievingRouteRepositoryException(
+      throw NotOptimizedRouteRetrievingRouteException(
         messageDetails: exception.toString(),
         stackTrace: stackTrace,
       );
@@ -110,13 +117,13 @@ class OsrmRouteRepository extends RouteRepository {
   ///
   /// Returns [Route] if request was successful.
   ///
-  /// Throws [LocationsLackRouteRepositoryException] if locations list is empty.
+  /// Throws [LocationsLackRouteException] if locations list is empty.
   ///
   /// Throws [OptimizedParametersCombinationOsrmException] if all route parameters were set to false.
   ///
-  /// Throws [EmptyRoutesResponseRouteRepositoryException] if no routes were returned.
+  /// Throws [EmptyRoutesResponseRouteException] if no routes were returned.
   ///
-  /// Throws [NotOptimizedRouteRetrievingRouteRepositoryException] if any other error occurs.
+  /// Throws [NotOptimizedRouteRetrievingRouteException] if any other error occurs.
   @override
   Future<Route> retrieveOptimizedRouteBetweenLocations({
     required List<Location> locations,
@@ -126,7 +133,7 @@ class OsrmRouteRepository extends RouteRepository {
   }) async {
     try {
       if (locations.isEmpty || locations.length == 1) {
-        throw LocationsLackRouteRepositoryException(
+        throw LocationsLackRouteException(
           messageDetails: 'locations length = ${locations.length}',
           stackTrace: StackTrace.current,
         );
@@ -143,7 +150,7 @@ class OsrmRouteRepository extends RouteRepository {
         );
       }
 
-      final osrm_trip.OsrmTripResponse osrmTripResponse =
+      final osrm_trip.OsrmTripResponseModel osrmTripResponse =
           await _osrmDatasource.retrieveTripRouteBetweenLocations(
         coordinates: locationCoordinates,
         withStartPoint: withStartPoint,
@@ -152,7 +159,7 @@ class OsrmRouteRepository extends RouteRepository {
       );
 
       if (osrmTripResponse.trips.isEmpty) {
-        throw EmptyRoutesResponseRouteRepositoryException(
+        throw EmptyRoutesResponseRouteException(
           stackTrace: StackTrace.current,
         );
       }
@@ -165,8 +172,9 @@ class OsrmRouteRepository extends RouteRepository {
                   ))
               .toList();
 
-      final List<double> distances =
-          osrmTripResponse.trips.first.legs.map((leg) => leg.distance).toList();
+      final List<double> distances = osrmTripResponse.trips.first.legs
+          .map((leg) => leg.distance.toDouble())
+          .toList();
 
       final List<int> durations = osrmTripResponse.trips.first.legs
           .map((leg) => leg.duration.toInt())
@@ -207,10 +215,15 @@ class OsrmRouteRepository extends RouteRepository {
         totalDistanceInMeters: distances.reduce((a, b) => a + b),
         totalDurationsInSeconds: durations.reduce((a, b) => a + b),
       );
-    } on RouteRepositoryException {
+    } on RouteException {
       rethrow;
+    } on OsrmException catch (exception) {
+      throw NotOptimizedRouteRetrievingRouteException(
+        messageDetails: exception.message,
+        stackTrace: exception.stackTrace,
+      );
     } catch (exception, stackTrace) {
-      throw OptimizedRouteRetrievingRouteRepositoryException(
+      throw OptimizedRouteRetrievingRouteException(
         messageDetails: exception.toString(),
         stackTrace: stackTrace,
       );
