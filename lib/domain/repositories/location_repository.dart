@@ -1,5 +1,5 @@
+import 'package:kursova/core/errors/location_exception.dart';
 import 'package:kursova/domain/entities/location.dart';
-import 'package:kursova/domain/enums/location_type.dart';
 import 'package:latlong2/latlong.dart';
 
 abstract class LocationRepository {
@@ -10,8 +10,8 @@ abstract class LocationRepository {
 
   /// Retrieves location data by coordinates.
   ///
-  /// Returns [Location] with retrieved data if request was successful and [Location] with
-  /// alreaady provided data otherwise.
+  /// Returns [Location] with retrieved data if request was successful and otherwise [Location] with
+  /// already provided data.
   ///
   /// The primaryLocationName of location is city/town if place if populated or generated name like 'Point 3'.
   /// The uid is always randomly generated.
@@ -23,7 +23,7 @@ abstract class LocationRepository {
 
   /// Retrieves location data by address.
   ///
-  /// Returns [Location] if request was successful and null if not.
+  /// Returns [Location] with retrieved data if request was successful, otherwise throws [RetrievingLocationByAddressLocationException].
   ///
   /// The primaryLocationName of location is city/town if place if populated or generated name like 'Point 3'.
   /// The uid is always randomly generated.

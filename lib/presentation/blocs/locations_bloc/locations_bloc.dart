@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kursova/core/app_constants.dart';
 import 'package:kursova/core/errors/location_exception.dart';
 import 'package:kursova/domain/entities/location.dart';
-import 'package:kursova/domain/enums/location_type.dart';
 import 'package:kursova/domain/usecases/retrieve_current_location_usecase.dart';
 import 'package:kursova/domain/usecases/retrieve_location_by_address.dart';
 import 'package:kursova/domain/usecases/retrieve_location_by_coordinates_usecase.dart';
@@ -15,7 +14,7 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
     required RetrieveLocationByCoordinatesUseCase
         retrieveLocationByCoordinatesUseCase,
     required RetrieveCurrentLocationUseCase retrieveCurrentLocationUseCase,
-    required RetrieveLocationByAddresssUseCase
+    required RetrieveLocationByAddressUseCase
         retrieveLocationByAddresssUseCase,
     required Logger logger,
   })  : _retrieveLocationByCoordinatesUseCase =
@@ -35,7 +34,7 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
   final RetrieveLocationByCoordinatesUseCase
       _retrieveLocationByCoordinatesUseCase;
   final RetrieveCurrentLocationUseCase _retrieveCurrentLocationUseCase;
-  final RetrieveLocationByAddresssUseCase _retrieveLocationByAddresssUseCase;
+  final RetrieveLocationByAddressUseCase _retrieveLocationByAddresssUseCase;
   final Logger _logger;
 
   final int locationsLimit = 10;
@@ -113,14 +112,16 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
 
       emit(LocationsNotEmpty(locations: locations));
     } on LocationException catch (exception) {
+      print(exception);
       _logger.e(
         'LocationsBloc ${exception.message}',
         error: exception,
         stackTrace: exception.stackTrace,
       );
 
-      emit(LocationsAddingLocationFailure(locations: state.locations));
+      emit(LocationsAddingCurrentLocationFailure(locations: state.locations));
     } catch (exception, stackTrace) {
+      print(exception);
       _logger.e(
         'LocationsBloc ${exception.toString()}',
         error: exception,

@@ -1,6 +1,7 @@
 import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:kursova/core/errors/osrm_exception.dart';
 import 'package:kursova/core/errors/route_exception.dart';
@@ -56,13 +57,21 @@ class OsrmRouteRepository extends RouteRepository {
         );
       }
 
-      final List<LatLng> polylineRouteCoordinates =
-          osrmRouteResponse.routes.first.geometry.coordinates
-              .map((coordinates) => LatLng(
-                    coordinates[1],
-                    coordinates[0],
-                  ))
-              .toList();
+      final PolylinePoints polylinePoints = PolylinePoints();
+
+      final List<LatLng> polylineRouteCoordinates = polylinePoints
+          .decodePolyline(osrmRouteResponse.routes.first.geometry)
+          .map((pointLatLng) => LatLng(
+                pointLatLng.latitude,
+                pointLatLng.longitude,
+              ))
+          .toList();
+      // osrmRouteResponse.routes.first.geometry.coordinates
+      //     .map((coordinates) => LatLng(
+      //           coordinates[1],
+      //           coordinates[0],
+      //         ))
+      //     .toList();
 
       final List<double> distances = osrmRouteResponse.routes.first.legs
           .map((leg) => leg.distance.toDouble())
@@ -123,7 +132,7 @@ class OsrmRouteRepository extends RouteRepository {
   ///
   /// Throws [EmptyRoutesResponseRouteException] if no routes were returned.
   ///
-  /// Throws [NotOptimizedRouteRetrievingRouteException] if any other error occurs.
+  /// Throws [OptimizedRouteRetrievingRouteException] if any other error occurs.
   @override
   Future<Route> retrieveOptimizedRouteBetweenLocations({
     required List<Location> locations,
@@ -164,13 +173,21 @@ class OsrmRouteRepository extends RouteRepository {
         );
       }
 
-      final List<LatLng> polylineRouteCoordinates =
-          osrmTripResponse.trips.first.geometry.coordinates
-              .map((coordinates) => LatLng(
-                    coordinates[1],
-                    coordinates[0],
-                  ))
-              .toList();
+      final PolylinePoints polylinePoints = PolylinePoints();
+
+      final List<LatLng> polylineRouteCoordinates = polylinePoints
+          .decodePolyline(osrmTripResponse.trips.first.geometry)
+          .map((pointLatLng) => LatLng(
+                pointLatLng.latitude,
+                pointLatLng.longitude,
+              ))
+          .toList();
+      // osrmTripResponse.trips.first.geometry.coordinates
+      //     .map((coordinates) => LatLng(
+      //           coordinates[1],
+      //           coordinates[0],
+      //         ))
+      //     .toList();
 
       final List<double> distances = osrmTripResponse.trips.first.legs
           .map((leg) => leg.distance.toDouble())
@@ -218,7 +235,7 @@ class OsrmRouteRepository extends RouteRepository {
     } on RouteException {
       rethrow;
     } on OsrmException catch (exception) {
-      throw NotOptimizedRouteRetrievingRouteException(
+      throw OptimizedRouteRetrievingRouteException(
         messageDetails: exception.message,
         stackTrace: exception.stackTrace,
       );

@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => InternetStatusBloc(
+            connectionService: getIt.get(),
             logger: getIt.get(),
           )..add(
               const InternetStatusListenRequested(),
@@ -48,6 +49,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => PermissionBloc(
             logger: getIt.get(),
+            locationService: getIt.get(),
+            permissionsService: getIt.get(),
           )..add(
               const PermissionInitRequested(),
             ),

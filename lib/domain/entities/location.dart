@@ -1,5 +1,10 @@
-import 'package:kursova/domain/enums/location_type.dart';
 import 'package:latlong2/latlong.dart';
+
+enum LocationType {
+  currentLocation,
+  locationOnMap,
+  locationFromSearch,
+}
 
 class Location {
   final String uid;

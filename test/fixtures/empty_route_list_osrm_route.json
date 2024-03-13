@@ -1,0 +1,33 @@
+{
+    "code": "Ok",
+    "routes": [],
+    "waypoints": [
+        {
+            "hint": "g_MKkIbzCpAfAAAAAAAAAAAAAABGAAAAOh9OQQAAAAAAAAAADIzoQR8AAAAAAAAAAAAAAEYAAACKBQEA1PPRAZi3AQM29dEBxrcBAwAAfwLenNbZ",
+            "distance": 25.670992442,
+            "name": "",
+            "location": [
+                30.53666,
+                50.444184
+            ]
+        },
+        {
+            "hint": "yuICiqR6apEqAAAALQAAAKkAAAAAAAAAZGaqQseesUJYtqhDAAAAACoAAAAtAAAAqQAAAAAAAACKBQEA-HG1AdVL_gKadbUBJ0v-AgEATwzenNbZ",
+            "distance": 69.130027589,
+            "name": "",
+            "location": [
+                28.668408,
+                50.219989
+            ]
+        },
+        {
+            "hint": "ihW7jDd5aI0WAAAAZQEAAGQFAAASAgAA0O3EQFGFxkI9lb9DEzYTQxYAAABlAQAAZAUAABICAACKBQEApemQAbcQBAMO6pABDRAEAwYAjw_enNbZ",
+            "distance": 20.320958195,
+            "name": "",
+            "location": [
+                26.274213,
+                50.598071
+            ]
+        }
+    ]
+}

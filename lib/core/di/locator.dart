@@ -1,4 +1,8 @@
 import 'package:get_it/get_it.dart';
+import 'package:http/http.dart' as http;
+import 'package:kursova/core/services/connection_service.dart';
+import 'package:kursova/core/services/location_service.dart';
+import 'package:kursova/core/services/permission_service.dart';
 import 'package:kursova/data/datasources/nominatim_datasource.dart';
 import 'package:kursova/data/datasources/osrm_datasource.dart';
 import 'package:kursova/data/repositories/nominatim_location_repository.dart';
@@ -24,13 +28,32 @@ void setupDependencies() {
       ),
     ),
   );
+  getIt.registerLazySingleton<http.Client>(
+    () => http.Client(),
+  );
+
+  // Services
+  getIt.registerLazySingleton<PermissionsService>(
+    () => PermissionsService(),
+  );
+  getIt.registerLazySingleton<LocationService>(
+    () => LocationService(),
+  );
+  getIt.registerLazySingleton<ConnectionService>(
+    () => ConnectionService(),
+  );
 
   // Datasources
   getIt.registerLazySingleton<OsrmDatasource>(
-    () => const OsrmDatasource(),
+    () => OsrmDatasource(
+      client: getIt.get(),
+    ),
   );
   getIt.registerLazySingleton<NominatimDatasouce>(
-      () => const NominatimDatasouce());
+    () => NominatimDatasouce(
+      client: getIt.get(),
+    ),
+  );
 
   // Repositories
   getIt.registerLazySingleton<RouteRepository>(
@@ -59,10 +82,12 @@ void setupDependencies() {
   getIt.registerLazySingleton<RetrieveCurrentLocationUseCase>(
     () => RetrieveCurrentLocationUseCase(
       locationRepository: getIt.get(),
+      permissionsService: getIt.get(),
+      locationService: getIt.get(),
     ),
   );
-  getIt.registerLazySingleton<RetrieveLocationByAddresssUseCase>(
-    () => RetrieveLocationByAddresssUseCase(
+  getIt.registerLazySingleton<RetrieveLocationByAddressUseCase>(
+    () => RetrieveLocationByAddressUseCase(
       locationRepository: getIt.get(),
     ),
   );

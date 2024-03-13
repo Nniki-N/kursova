@@ -1,0 +1,35 @@
+{
+    "place_id": 143228132,
+    "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+    "osm_type": "way",
+    "osm_id": 4054817,
+    "lat": "48.136817",
+    "lon": "11.57705941457272",
+    "category": "tourism",
+    "type": "attraction",
+    "place_rank": 30,
+    "importance": 0.3197110336847337,
+    "addresstype": "tourism",
+    "name": "Old Town Hall",
+    "display_name": "Old Town Hall, 15, Marienplatz, Graggenauerviertel, Graggenau, Altstadt-Lehel, Munich, Bavaria, 80331, Germany",
+    "address": {
+        "tourism": "Old Town Hall",
+        "house_number": "15",
+        "road": "Marienplatz",
+        "quarter": "Graggenauerviertel",
+        "neighbourhood": "Graggenau",
+        "suburb": "Altstadt-Lehel",
+        "city": "Munich",
+        "state": "Bavaria",
+        "ISO3166-2-lvl4": "DE-BY",
+        "postcode": "80331",
+        "country": "Germany",
+        "country_code": "de"
+    },
+    "boundingbox": [
+        "48.1366154",
+        "48.1370186",
+        "11.5767578",
+        "11.5773610"
+    ]
+}

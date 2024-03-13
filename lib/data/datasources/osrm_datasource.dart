@@ -8,7 +8,11 @@ import 'package:latlong2/latlong.dart';
 
 /// For use of the free OSRM API
 class OsrmDatasource {
-  const OsrmDatasource();
+  const OsrmDatasource({
+    required http.Client client,
+  }) : _client = client;
+
+  final http.Client _client;
 
   final String _host = 'router.project-osrm.org';
   final String _carRoutingServicePath = '/route/v1/car/';
@@ -35,16 +39,13 @@ class OsrmDatasource {
         unencodedPath,
         {
           'overview': 'full',
-          'geometries': 'geojson',
         },
       );
 
-      final http.Request request = http.Request('GET', uri);
-      final http.StreamedResponse response = await request.send();
+      final http.Response response = await _client.get(uri);
 
       if (response.statusCode == 200) {
-        final String data = await response.stream.bytesToString();
-        final Map<String, dynamic> dataAsJson = json.decode(data);
+        final Map<String, dynamic> dataAsJson = json.decode(response.body);
 
         return OsrmRouteResponseModel.fromJson(dataAsJson);
       } else {
@@ -69,7 +70,7 @@ class OsrmDatasource {
   ///
   /// Set [roundTrip] to true if trip has to be cycled.
   ///
-  /// Returns [TripRequestOsrmException] if request was successful.
+  /// Returns [OsrmTripResponseModel] if request was successful.
   ///
   /// Throws [TripRequestOsrmException] if request failed and [TripRetrievingOsrmException] if any other error occurs.
   Future<OsrmTripResponseModel> retrieveTripRouteBetweenLocations({
@@ -82,7 +83,7 @@ class OsrmDatasource {
       if (!withEndPoint && !withStartPoint && !roundTrip) {
         throw TripRequestParametersCombinationOsrmException(
           messageDetails:
-              'withStartPoint = $withStartPoint, withEndPoint = $withEndPoint, roundTrip = $roundTrip,',
+              'withStartPoint = $withStartPoint, withEndPoint = $withEndPoint, roundTrip = $roundTrip',
           stackTrace: StackTrace.current,
         );
       }
@@ -102,16 +103,13 @@ class OsrmDatasource {
           'destination': withEndPoint ? 'last' : 'any',
           'roundtrip': roundTrip.toString(),
           'overview': 'full',
-          'geometries': 'geojson',
         },
       );
 
-      final http.Request request = http.Request('GET', uri);
-      final http.StreamedResponse response = await request.send();
+      final http.Response response = await _client.get(uri);
 
       if (response.statusCode == 200) {
-        final String data = await response.stream.bytesToString();
-        final Map<String, dynamic> dataAsJson = json.decode(data);
+        final Map<String, dynamic> dataAsJson = json.decode(response.body);
 
         return OsrmTripResponseModel.fromJson(dataAsJson);
       } else {

@@ -47,7 +47,7 @@ class CustomPositionedInfoPopUpWrapper extends StatelessWidget {
     const double padding = 20;
     const double closeIconSize = 18;
 
-    final double contentHeight = MeasureUtil.measureWidget(
+    final double contentHeight = WidgetMeasureUtil.measureWidget(
           SizedBox(
             width: popupHelpWidth - padding - padding - closeIconSize - 10,
             child: CustomPositionedPopUpContentColumn(

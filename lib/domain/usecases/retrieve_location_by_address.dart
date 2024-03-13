@@ -1,8 +1,8 @@
 import 'package:kursova/domain/entities/location.dart';
 import 'package:kursova/domain/repositories/location_repository.dart';
 
-class RetrieveLocationByAddresssUseCase {
-  RetrieveLocationByAddresssUseCase({
+class RetrieveLocationByAddressUseCase {
+  RetrieveLocationByAddressUseCase({
     required LocationRepository locationRepository,
   }) : _locationRepository = locationRepository;
 

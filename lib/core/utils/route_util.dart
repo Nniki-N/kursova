@@ -7,12 +7,13 @@ abstract class RouteUtil {
   static List<LatLng> simplifyCoordinatesRoute({
     required List<LatLng> routeCoordinates,
     required bool cycledroute,
+    int minimalRouteCoordinatesLengthToSimplify = 35000,
   }) {
+    print('routeCoordinates = ${routeCoordinates.length}');
+    
     if (routeCoordinates.length <= 35000) {
       return routeCoordinates;
     }
-
-    print('routeCoordinates = ${routeCoordinates.length}');
 
     List<LatLng> tempLastCoordinates = [];
 
@@ -28,9 +29,10 @@ abstract class RouteUtil {
     }
 
     double tolerance = 0.000001;
-    if (routeCoordinates.length > 75000) {
+    if (routeCoordinates.length > minimalRouteCoordinatesLengthToSimplify * 2) {
       tolerance = 0.00001;
-    } else if (routeCoordinates.length > 35000) {
+    } else if (routeCoordinates.length >
+        minimalRouteCoordinatesLengthToSimplify) {
       tolerance = 0.000001;
     }
 

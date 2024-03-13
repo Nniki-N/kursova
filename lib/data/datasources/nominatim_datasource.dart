@@ -6,7 +6,11 @@ import 'package:kursova/data/models/nominatim_response_model.dart';
 
 /// For use of the free Nominatim API
 class NominatimDatasouce {
-  const NominatimDatasouce();
+  const NominatimDatasouce({
+    required http.Client client,
+  }) : _client = client;
+
+  final http.Client _client;
 
   final String _host = 'nominatim.openstreetmap.org';
   final String _reverseServicePath = '/reverse';
@@ -34,12 +38,10 @@ class NominatimDatasouce {
         },
       );
 
-      final request = http.Request('GET', uri);
-      final http.StreamedResponse response = await request.send();
+      final http.Response response = await _client.get(uri);
 
       if (response.statusCode == 200) {
-        final String data = await response.stream.bytesToString();
-        final Map<String, dynamic> dataAsJson = json.decode(data);
+        final Map<String, dynamic> dataAsJson = json.decode(response.body);
 
         return NominatimResponseModel(
           city: dataAsJson['address']['city'] ?? dataAsJson['address']['town'],
@@ -89,12 +91,10 @@ class NominatimDatasouce {
         },
       );
 
-      final request = http.Request('GET', uri);
-      final http.StreamedResponse response = await request.send();
+      final http.Response response = await _client.get(uri);
 
       if (response.statusCode == 200) {
-        final String data = await response.stream.bytesToString();
-        final List<dynamic> dataAsJsonList = json.decode(data);
+        final List<dynamic> dataAsJsonList = json.decode(response.body);
 
         if (dataAsJsonList.isEmpty) {
           throw EmptyAddressDataResponseNominatimException(

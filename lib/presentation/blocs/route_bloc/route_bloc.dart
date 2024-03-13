@@ -93,13 +93,13 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
         withStartPoint: event.withStartPoint ?? state.withStartPoint,
         cycledRoute: false,
       ));
+    } else {
+      emit(RouteConfigurationUpdated(
+        withEndPoint: event.withEndPoint ?? state.withEndPoint,
+        withStartPoint: event.withStartPoint ?? state.withStartPoint,
+        cycledRoute: event.cycledRoute ?? state.cycledRoute,
+      ));
     }
-
-    emit(RouteConfigurationUpdated(
-      withEndPoint: event.withEndPoint ?? state.withEndPoint,
-      withStartPoint: event.withStartPoint ?? state.withStartPoint,
-      cycledRoute: event.cycledRoute ?? state.cycledRoute,
-    ));
   }
 
   Future<void> _removeRoute(

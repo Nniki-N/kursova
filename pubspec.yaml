@@ -34,14 +34,20 @@ dependencies:
   geolocator: ^11.0.0
   latlong2: ^0.9.0
   connectivity_plus: ^5.0.2
-  permission_handler: ^11.3.0
+  permission_handler: 11.1.0
   logger: ^2.0.2+1
 
 dev_dependencies:
+  # integration_test:
+  #   sdk: flutter
   flutter_test:
     sdk: flutter
+  # flutter_driver:
+  #   sdk: flutter
 
   flutter_lints: ^3.0.1
+  mocktail: ^1.0.3
+  bloc_test: ^9.1.6
 
 flutter:
   uses-material-design: true

@@ -4,7 +4,6 @@ import 'package:kursova/core/errors/nominatim_exception.dart';
 import 'package:kursova/data/datasources/nominatim_datasource.dart';
 import 'package:kursova/data/models/nominatim_response_model.dart';
 import 'package:kursova/domain/entities/location.dart';
-import 'package:kursova/domain/enums/location_type.dart';
 import 'package:kursova/domain/repositories/location_repository.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:logger/logger.dart';
@@ -34,8 +33,8 @@ class NominatimLocationRepository extends LocationRepository {
 
   /// Retrieves location data by coordinates.
   ///
-  /// Returns [Location] with retrieved data if request was successful and [Location] with
-  /// already provided data otherwise.
+  /// Returns [Location] with retrieved data if request was successful and otherwise [Location] with
+  /// already provided data.
   ///
   /// The primaryLocationName of location is city/town if place if populated or generated name like 'Point 3'.
   /// The uid is always randomly generated.

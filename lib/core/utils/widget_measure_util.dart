@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 /// Small utility to measure a widget before actually putting it on screen.
 ///
 /// This can be helpful e.g. for positioning context menus based on the size they will take up.
-abstract class MeasureUtil {
+abstract class WidgetMeasureUtil {
   static Size measureWidget(Widget widget,
       [BoxConstraints constraints = const BoxConstraints()]) {
     final PipelineOwner pipelineOwner = PipelineOwner();

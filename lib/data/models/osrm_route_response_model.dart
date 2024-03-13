@@ -33,7 +33,7 @@ class Routes {
     required this.distance,
   });
 
-  final Geometry geometry;
+  final String geometry;
   final List<Leg> legs;
   final String weightName;
   final num weight;
@@ -42,7 +42,8 @@ class Routes {
 
   factory Routes.fromJson(Map<String, dynamic> json) {
     return Routes(
-      geometry: Geometry.fromJson(json['geometry']),
+      geometry: json['geometry'],
+      // geometry: Geometry.fromJson(json['geometry']),
       legs: json['legs'] == null
           ? []
           : List<Leg>.from(json['legs']!.map((x) => Leg.fromJson(x))),
@@ -54,25 +55,26 @@ class Routes {
   }
 }
 
-class Geometry {
-  Geometry({
-    required this.coordinates,
-    required this.type,
-  });
+// class Geometry {
+//   Geometry({
+//     required this.coordinates,
+//     required this.type,
+//   });
 
-  final List<List<double>> coordinates;
-  final String type;
+//   final List<List<double>> coordinates;
+//   final String type;
 
-  factory Geometry.fromJson(Map<String, dynamic> json) {
-    return Geometry(
-      coordinates: json['coordinates'] == null
-          ? []
-          : List<List<double>>.from(json['coordinates']!.map(
-              (x) => x == null ? [] : List<double>.from(x!.map((x) => x)))),
-      type: json['type'],
-    );
-  }
-}
+//   factory Geometry.fromJson(Map<String, dynamic> json) {
+//     return Geometry(
+//       coordinates: json['coordinates'] == null
+//           ? []
+//           : List<List<double>>.from(json['coordinates']!.map(
+//               (x) => x == null ? [] : List<double>.from(x!.map((x) => x)))),
+//       type: json['type'],
+//     );
+//   }
+// }
+
 
 class Leg {
   Leg({

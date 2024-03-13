@@ -5,7 +5,6 @@ import 'package:kursova/core/app_constants.dart';
 import 'package:kursova/core/utils/image_asset_path_formater.dart';
 import 'package:kursova/core/utils/widget_measure_util.dart';
 import 'package:kursova/domain/entities/location.dart';
-import 'package:kursova/domain/enums/location_type.dart';
 import 'package:kursova/presentation/blocs/locations_bloc/locations_bloc.dart';
 import 'package:kursova/presentation/blocs/locations_bloc/locations_event.dart';
 import 'package:kursova/presentation/blocs/locations_bloc/locations_state.dart';
@@ -337,7 +336,7 @@ class _LocationsReorderableListViewState
       itemBuilder: (context, index) {
         // Shows that location is loading
         if (index == locations.length && widget.isAddingNewLocation) {
-          final height = MeasureUtil.measureWidget(Text(
+          final height = WidgetMeasureUtil.measureWidget(Text(
             '',
             textDirection: TextDirection.ltr,
             style: AppTypography.mainTextStyle,
