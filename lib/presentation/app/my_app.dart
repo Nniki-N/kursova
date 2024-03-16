@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kursova/core/app_localization.dart';
 import 'package:kursova/core/di/locator.dart';
 import 'package:kursova/presentation/blocs/internet_status_bloc/internet_status_bloc.dart';
 import 'package:kursova/presentation/blocs/internet_status_bloc/internet_status_event.dart';
@@ -56,27 +55,16 @@ class MyApp extends StatelessWidget {
             ),
         ),
       ],
-      child: EasyLocalization(
-        supportedLocales: AppLocalization.supportedLocales,
-        path: AppLocalization.translationsPath,
-        fallbackLocale: AppLocalization.ukLocale,
-        useFallbackTranslations: true,
-        useOnlyLangCode: true,
-        child: Builder(
-          builder: (context) {
-            return MaterialApp(
-              title: 'Kursova',
-              debugShowCheckedModeBanner: false,
-              theme: ThemeData(
-                fontFamily: 'Inter',
-              ),
-              localizationsDelegates: context.localizationDelegates,
-              supportedLocales: context.supportedLocales,
-              locale: context.locale,
-              home: const InitialScreen(),
-            );
-          },
+      child: MaterialApp(
+        title: 'Kursova',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: 'Inter',
         ),
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
+        home: const InitialScreen(),
       ),
     );
   }

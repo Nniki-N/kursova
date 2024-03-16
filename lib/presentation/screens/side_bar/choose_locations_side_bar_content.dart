@@ -83,6 +83,7 @@ class ChooseLocationsSideBarContent extends StatelessWidget {
         leftPadding: padding,
         rightPadding: padding,
         child: CustomSearchField(
+          key: const ValueKey('search_field'),
           controller: textFieldController,
           hintText: 'search'.tr(context: context),
           buttonIconPath: Svgs.addIcon,
@@ -233,6 +234,7 @@ class ChooseLocationsSideBarContent extends StatelessWidget {
       ),
       const SizedBox(height: 15),
       SideBarHorizontalPaddingsContainer(
+        key: const ValueKey('find_route_button'),
         leftPadding: padding,
         rightPadding: padding,
         child: CustomMainButton(
@@ -253,6 +255,7 @@ class ChooseLocationsSideBarContent extends StatelessWidget {
       ),
       const SizedBox(height: 15),
       SideBarHorizontalPaddingsContainer(
+        key: const ValueKey('clear_locations_button'),
         leftPadding: padding,
         rightPadding: padding,
         child: CustomMainButton(
@@ -577,6 +580,7 @@ class _AdvancedOptionsState extends State<AdvancedOptions> {
               BlocBuilder<RouteBloc, RouteState>(
                 builder: (context, routeState) {
                   return SideBarOptionWithSwitch(
+                    key: const ValueKey('cycled_route_option'),
                     text: 'cycleRoute'.tr(context: context),
                     infoTitle: 'cycleRouteTitle'.tr(context: context),
                     infoText: 'cycleRouteText'.tr(context: context),
@@ -595,6 +599,7 @@ class _AdvancedOptionsState extends State<AdvancedOptions> {
               BlocBuilder<RouteBloc, RouteState>(
                 builder: (context, routeState) {
                   return SideBarOptionWithSwitch(
+                    key: const ValueKey('set_start_point_option'),
                     text: 'setStartPoint'.tr(context: context),
                     infoTitle: 'setStartPointTitle'.tr(context: context),
                     infoText: 'setStartPointText'.tr(context: context),
@@ -613,6 +618,7 @@ class _AdvancedOptionsState extends State<AdvancedOptions> {
               BlocBuilder<RouteBloc, RouteState>(
                 builder: (context, routeState) {
                   return SideBarOptionWithSwitch(
+                    key: const ValueKey('set_end_point_option'),
                     text: 'setEndPoint'.tr(context: context),
                     infoTitle: 'setEndPointTitle'.tr(context: context),
                     infoText: 'setEndPointText'.tr(context: context),

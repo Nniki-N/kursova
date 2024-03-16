@@ -55,6 +55,7 @@ class SideBarOptionWithSwitch extends StatelessWidget {
         ),
         const SizedBox(width: 30),
         CustomSwitch(
+          key: const ValueKey('custom_switch'),
           value: value,
           onToggle: onToggle,
         ),

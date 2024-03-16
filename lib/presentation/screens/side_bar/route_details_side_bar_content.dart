@@ -182,6 +182,7 @@ class RouteDetailsSideBarContent extends StatelessWidget {
       ),
       const SizedBox(height: 35),
       SideBarHorizontalPaddingsContainer(
+        key: const ValueKey('back_button'),
         leftPadding: padding,
         rightPadding: padding,
         child: CustomMainButton(
@@ -234,6 +235,7 @@ class LocationsListView extends StatelessWidget {
 
         // Location name
         return Text(
+          key: const ValueKey('route_details_location_name'),
           locationNameText,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,

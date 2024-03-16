@@ -59,6 +59,7 @@ class SideBarHeader extends StatelessWidget {
 
         // Hides side bar
         CustomSquareButtonWithIcon(
+          key: const ValueKey('side_bar_hide_button'),
           iconSize: 16,
           iconPath: Svgs.smallArrowLeftIcon,
           onTap: () {

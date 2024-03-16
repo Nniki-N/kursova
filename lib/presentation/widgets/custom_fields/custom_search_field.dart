@@ -102,6 +102,7 @@ class CustomSearchField extends StatelessWidget {
           ),
         ),
         GestureDetector(
+          key: const ValueKey('enter_button'),
           onTap: onTap,
           child: Container(
             width: buttonWidth,

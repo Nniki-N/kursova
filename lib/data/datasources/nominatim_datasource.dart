@@ -38,10 +38,14 @@ class NominatimDatasouce {
         },
       );
 
+      print(uri);
+
       final http.Response response = await _client.get(uri);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> dataAsJson = json.decode(response.body);
+
+        print(dataAsJson);
 
         return NominatimResponseModel(
           city: dataAsJson['address']['city'] ?? dataAsJson['address']['town'],

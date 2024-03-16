@@ -62,6 +62,7 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin {
 
               // A side bar
               Positioned(
+                key: const ValueKey('side_bar_positioned_widget'),
                 top: 0,
                 bottom: 0,
                 left: sideBarMenuState == SideBarMenuVisibility.visible
