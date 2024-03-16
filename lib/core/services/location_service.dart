@@ -8,7 +8,7 @@ class LocationService {
 
     return LatLng(
       position.latitude,
-      position.accuracy,
+      position.longitude,
     );
   }
 
