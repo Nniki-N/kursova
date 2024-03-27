@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kursova/core/errors/route_exception.dart';
 import 'package:kursova/domain/entities/route.dart';
 import 'package:kursova/domain/usecases/find_route_usecase.dart';
-import 'package:kursova/presentation/blocs/route_bloc/Route_event.dart';
+import 'package:kursova/presentation/blocs/route_bloc/route_event.dart';
 import 'package:kursova/presentation/blocs/route_bloc/route_state.dart';
 import 'package:logger/logger.dart';
 

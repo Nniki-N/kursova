@@ -12,8 +12,8 @@ import 'package:kursova/presentation/blocs/map_markers_bloc/map_markers_bloc.dar
 import 'package:kursova/presentation/blocs/map_markers_bloc/map_markers_event.dart';
 import 'package:kursova/presentation/blocs/permissions_bloc/permission_bloc.dart';
 import 'package:kursova/presentation/blocs/permissions_bloc/permission_state.dart';
-import 'package:kursova/presentation/blocs/route_bloc/Route_event.dart';
 import 'package:kursova/presentation/blocs/route_bloc/route_bloc.dart';
+import 'package:kursova/presentation/blocs/route_bloc/route_event.dart';
 import 'package:kursova/presentation/blocs/route_bloc/route_state.dart';
 import 'package:kursova/presentation/screens/side_bar/widgets/side_bar_header.dart';
 import 'package:kursova/presentation/screens/side_bar/widgets/side_bar_horizontal_paddings_container.dart';
