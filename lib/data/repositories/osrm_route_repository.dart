@@ -66,12 +66,6 @@ class OsrmRouteRepository extends RouteRepository {
                 pointLatLng.longitude,
               ))
           .toList();
-      // osrmRouteResponse.routes.first.geometry.coordinates
-      //     .map((coordinates) => LatLng(
-      //           coordinates[1],
-      //           coordinates[0],
-      //         ))
-      //     .toList();
 
       final List<double> distances = osrmRouteResponse.routes.first.legs
           .map((leg) => leg.distance.toDouble())
@@ -182,12 +176,6 @@ class OsrmRouteRepository extends RouteRepository {
                 pointLatLng.longitude,
               ))
           .toList();
-      // osrmTripResponse.trips.first.geometry.coordinates
-      //     .map((coordinates) => LatLng(
-      //           coordinates[1],
-      //           coordinates[0],
-      //         ))
-      //     .toList();
 
       final List<double> distances = osrmTripResponse.trips.first.legs
           .map((leg) => leg.distance.toDouble())
