@@ -9,6 +9,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 
+/// A class that interacts with [NominatimDatasouce] to communicate with Nominatim API.
 class NominatimLocationRepository extends LocationRepository {
   NominatimLocationRepository({
     required NominatimDatasouce nominatimDatasouce,
@@ -25,16 +26,19 @@ class NominatimLocationRepository extends LocationRepository {
         (++_namelessLocationsCount).toString(),
       ]);
 
-  /// Resets whole repository saved data. This is recomended to do start generation of unnamed locations from the beggining.
+  /// Resets whole repository saved data. This is recomended to do to start generation of unnamed locations from the beggining.
   @override
   void resetRepository() {
     _namelessLocationsCount = 0;
   }
 
-  /// Retrieves location data by coordinates.
+  /// Retrieves location data by coordinates [latLng].
+  /// 
+  /// [returnedLocationType] specifies the way the location was choosen. It does not affect request and is returned just as [Location.locationType] value.
+  /// 
+  /// [lang] represents language of response data. It has to be language code only. By default is 'en', which is language code of English.
   ///
-  /// Returns [Location] with retrieved data if request was successful and otherwise [Location] with
-  /// already provided data.
+  /// Returns [Location] with retrieved data if request was successful and otherwise [Location] with already provided data.
   ///
   /// The primaryLocationName of location is city/town if place if populated or generated name like 'Point 3'.
   /// The uid is always randomly generated.
@@ -101,7 +105,11 @@ class NominatimLocationRepository extends LocationRepository {
     }
   }
 
-  /// Retrieves location data by address.
+  /// Retrieves location data by address [address].
+  /// 
+  /// [returnedLocationType] specifies the way the location was choosen. It does not affect request and is returned just as [Location.locationType] value.
+  /// 
+  /// [lang] represents language of response data. It has to be language code only. By default is 'en', which is language code of English.
   ///
   /// Returns [Location] with retrieved data if request was successful, otherwise throws [RetrievingLocationByAddressLocationException].
   ///

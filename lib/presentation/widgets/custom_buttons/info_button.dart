@@ -6,7 +6,6 @@ import 'package:kursova/presentation/widgets/custom_popups/custom_positioned_inf
 import 'package:kursova/resources/app_ui_constants.dart';
 import 'package:kursova/resources/graphics/resources.dart';
 
-
 /// The info button shows a positioned popup or a bottom sheet with hint text.
 /// 
 /// The positioned popup is shown if screen is larger than of a small tablet, otherwise the bottoms sheet is shown.

@@ -6,6 +6,7 @@ enum LocationType {
   locationFromSearch,
 }
 
+/// A class for location detailed data.
 class Location {
   final String uid;
   final String primaryLocationName;

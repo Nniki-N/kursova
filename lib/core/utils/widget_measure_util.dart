@@ -3,15 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-/// Small utility to measure a widget before actually putting it on screen.
+/// An util to measure a widget before actually putting it on screen.
 ///
 /// This can be helpful e.g. for positioning context menus based on the size they will take up.
 abstract class WidgetMeasureUtil {
-  static Size measureWidget(Widget widget,
-      [BoxConstraints constraints = const BoxConstraints()]) {
+
+  /// Measures size of provided [widget].
+  static Size measureWidget(Widget widget) {
     final PipelineOwner pipelineOwner = PipelineOwner();
     final _MeasurementView rootView =
-        pipelineOwner.rootNode = _MeasurementView(constraints);
+        pipelineOwner.rootNode = _MeasurementView(const BoxConstraints());
     final BuildOwner buildOwner = BuildOwner(focusManager: FocusManager());
     final RenderObjectToWidgetElement<RenderBox> element =
         RenderObjectToWidgetAdapter<RenderBox>(
@@ -25,8 +26,10 @@ abstract class WidgetMeasureUtil {
       return rootView.size;
     } finally {
       // Cleans up
-      element
-          .update(RenderObjectToWidgetAdapter<RenderBox>(container: rootView));
+      element.update(
+        RenderObjectToWidgetAdapter<RenderBox>(container: rootView),
+      );
+
       buildOwner.finalizeTree();
     }
   }

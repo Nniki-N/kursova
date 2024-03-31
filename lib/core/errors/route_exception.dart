@@ -1,5 +1,6 @@
 import 'package:kursova/core/utils/exception_util.dart';
 
+/// An exception interface for all route creating stages exceptions.
 abstract class RouteException implements Exception {
   final String message;
   final StackTrace? stackTrace;

@@ -6,6 +6,7 @@ import 'package:kursova/domain/repositories/location_repository.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+/// Use case that is used for retrieving current location via comunication with device location services and [LocationRepository].
 class RetrieveCurrentLocationUseCase {
   RetrieveCurrentLocationUseCase({
     required LocationRepository locationRepository,
@@ -19,6 +20,15 @@ class RetrieveCurrentLocationUseCase {
   final PermissionsService _permissionsService;
   final LocationService _locationService;
 
+  /// Requests permission for using location services and uses current position of device to retrieve data about location base on the current position.
+  /// 
+  /// [locationDataLang] represents language of response data. It has to be language code only.
+  /// 
+  /// [startRetrievingLocationsFromFirstPoint] resets nameless points count.
+  /// 
+  /// Any exception that can occur inherit [LocationException].
+  /// 
+  /// Throws [LocationPermissionIsNotGrantedLocationException] if user denies location permission.
   Future<Location> execute({
     required String locationDataLang,
     bool startRetrievingLocationsFromFirstPoint = false,
@@ -55,6 +65,7 @@ class RetrieveCurrentLocationUseCase {
     throw LocationPermissionIsNotGrantedLocationException();
   }
 
+  /// Retrieves current position of device and requests location data based on the curren position.
   Future<Location> _retrieveCurrentLocationWhenPermissionGranted({
     required String lang,
   }) async {

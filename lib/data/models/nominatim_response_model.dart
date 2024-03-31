@@ -1,3 +1,5 @@
+
+/// A class that represents general data of Nominatim API's response for location details.
 class NominatimResponseModel {
   final String? city;
   final String? neighbourhood;

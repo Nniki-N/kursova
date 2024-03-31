@@ -15,6 +15,7 @@ import 'package:kursova/domain/entities/route.dart';
 import 'package:kursova/domain/repositories/route_repository.dart';
 import 'package:latlong2/latlong.dart';
 
+/// A class that interacts with [OsrmDatasource] to communicate with OSRM API.
 class OsrmRouteRepository extends RouteRepository {
   const OsrmRouteRepository({
     required OsrmDatasource osrmDatasource,
@@ -22,7 +23,9 @@ class OsrmRouteRepository extends RouteRepository {
 
   final OsrmDatasource _osrmDatasource;
 
-  /// Retrieves main route for vehicle between locations in provided order by converting route polyline from osrm api in coordinates.
+  /// Retrieves main route for vehicle between locations [orderedLocations] in provided order by converting route polyline from osrm api in coordinates.
+  /// 
+  /// The route is simplified if it is too long. Еhe performed simplification does not affect the further accuracy of the route display on maps.
   ///
   /// Returns [Route] if request was successful.
   ///
@@ -110,8 +113,10 @@ class OsrmRouteRepository extends RouteRepository {
     }
   }
 
-  /// Retrieves optimized route for vehicle between locations by converting route polyline from osrm api in coordinates.
-  ///
+  /// Retrieves optimized route for vehicle between locations [locations] by converting route polyline from osrm api in coordinates.
+  /// 
+  /// The route is simplified if it is too long. Еhe performed simplification does not affect the further accuracy of the route display on maps.
+  /// 
   /// Set [withStartPoint] to true if first location in list has to be start of the route. Set [withEndPoint] to true if last location in list has to be end of the route.
   ///
   /// Set [roundTrip] to true if route has to be cycled. All route parameters can not be set to false at the same time!

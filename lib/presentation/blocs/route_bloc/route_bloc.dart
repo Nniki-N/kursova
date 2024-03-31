@@ -6,6 +6,7 @@ import 'package:kursova/presentation/blocs/route_bloc/route_event.dart';
 import 'package:kursova/presentation/blocs/route_bloc/route_state.dart';
 import 'package:logger/logger.dart';
 
+/// A BLoC that is responsible for route creating and displaying on the map.
 class RouteBloc extends Bloc<RouteEvent, RouteState> {
   RouteBloc({
     required FindRouteUseCase findRouteUseCase,
@@ -21,6 +22,9 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
   final FindRouteUseCase _findRouteUseCase;
   final Logger _logger;
 
+  /// Finds route between [RouteFindRouteRequested.locations] base on selected configuration.
+  /// 
+  /// Emits [RouteLoaded] if route was found, otherwise emits [RouteLoadingRouteFaillure].
   Future<void> _findRoute(
     RouteFindRouteRequested event,
     Emitter<RouteState> emit,
@@ -76,6 +80,20 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
     }
   }
 
+  /// Changes route configuration.
+  /// 
+  /// Set [RouteConfigureRouteRequested.cycledRoute] to true if you want to get cycled route in result.
+  /// 
+  /// Set [RouteConfigureRouteRequested.withEndPoint] or [RouteConfigureRouteRequested.withStartPoint] to true if you want to get optimized one way route.
+  /// 
+  /// By setting [RouteConfigureRouteRequested.withEndPoint] to true, found route will end with last location from provided.
+  /// 
+  /// By setting [RouteConfigureRouteRequested.withStartPoint] to true, found route will start from first location from provided.
+  /// 
+  /// [RouteConfigureRouteRequested.withEndPoint] and [RouteConfigureRouteRequested.withStartPoint] can be set to true at the same time, but [RouteConfigureRouteRequested.cycledRoute]
+  /// can not be used with another route configuration settings.
+  /// 
+  /// Emits [RouteConfigurationUpdated] after configuration changing.
   Future<void> _configureRoute(
     RouteConfigureRouteRequested event,
     Emitter<RouteState> emit,
@@ -102,6 +120,9 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
     }
   }
 
+  /// Cleans BLoC state by removing route from it.
+  /// 
+  /// Emits [RouteEmpty].
   Future<void> _removeRoute(
     RouteRemoveRouteRequested event,
     Emitter<RouteState> emit,

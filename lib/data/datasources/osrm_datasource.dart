@@ -6,7 +6,7 @@ import 'package:kursova/data/models/osrm_route_response_model.dart';
 import 'package:kursova/data/models/osrm_trip_response_model.dart';
 import 'package:latlong2/latlong.dart';
 
-/// For use of the free OSRM API
+/// A class for communication with OSRM API.
 class OsrmDatasource {
   const OsrmDatasource({
     required http.Client client,
@@ -18,7 +18,8 @@ class OsrmDatasource {
   final String _carRoutingServicePath = '/route/v1/car/';
   final String _carTripServicePath = '/trip/v1/car/';
 
-  /// Retrieves routes for vehicle between locations in order they are provided.
+  /// Retrieves routes for vehicle between locations [orderedCoordinates] in order they are provided.
+  /// Locations are provided as list of ordered coordinates [orderedCoordinates].
   ///
   /// Returns [OsrmRouteResponseModel] if request was successful.
   ///
@@ -65,6 +66,7 @@ class OsrmDatasource {
   }
 
   /// Retrieves trip for vehicle between locations.
+  /// Locations are provided as list of coordinates [coordinates].
   ///
   /// Set [withStartPoint] to true if first location in list has to be start of the trip. Set [withEndPoint] to true if last location in list has to be end of the trip.
   ///
@@ -128,6 +130,9 @@ class OsrmDatasource {
     }
   }
 
+  /// Formates [locations] in a string that can be used for requests.
+  /// 
+  /// String has such structure: 'longitude,latitude;longitude,latitude;...longitude,latitude'
   String _formatCoordinatesInString({
     required List<LatLng> locations,
   }) {

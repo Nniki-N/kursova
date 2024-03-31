@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kursova/resources/app_colors.dart';
 import 'package:kursova/resources/app_ui_constants.dart';
 
+/// A custom switch widget.
 class CustomSwitch extends StatefulWidget {
   final void Function(bool value)? onToggle;
   final bool? value;

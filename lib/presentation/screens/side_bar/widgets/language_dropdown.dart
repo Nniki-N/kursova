@@ -6,6 +6,7 @@ import 'package:kursova/core/app_localization.dart';
 import 'package:kursova/resources/app_colors.dart';
 import 'package:kursova/resources/app_typography.dart';
 
+/// A language dropdown widget that has only language specified in [AppLocalization] as values.
 class LanguageDropdown extends StatefulWidget {
   const LanguageDropdown({
     super.key,

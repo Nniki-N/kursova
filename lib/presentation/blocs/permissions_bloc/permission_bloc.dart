@@ -6,6 +6,7 @@ import 'package:kursova/presentation/blocs/permissions_bloc/permission_state.dar
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+/// A BLoC that is responsible app permissions.
 class PermissionBloc extends Bloc<PermissionEvent, PermissionState> {
   PermissionBloc({
     required Logger logger,
@@ -22,6 +23,9 @@ class PermissionBloc extends Bloc<PermissionEvent, PermissionState> {
   final PermissionsService _permissionsService;
   final LocationService _locationService;
 
+  /// Checks if location service is enabled and location permission is granted.
+  /// 
+  /// Emits [PermissionLoaded].
   Future<void> _init(
     PermissionInitRequested event,
     Emitter<PermissionState> emit,

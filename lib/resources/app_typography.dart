@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kursova/resources/app_colors.dart';
 
+/// A class that contains all text styles used in UI.
 abstract class AppTypography {
   static const double textHeight = 1.2;
 

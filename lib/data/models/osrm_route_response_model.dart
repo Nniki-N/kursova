@@ -1,3 +1,5 @@
+
+/// A class that represents OSRM API's response for route creating request.
 class OsrmRouteResponseModel {
   OsrmRouteResponseModel({
     required this.code,

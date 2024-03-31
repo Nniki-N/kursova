@@ -2,6 +2,7 @@
 import 'package:kursova/domain/entities/location.dart';
 import 'package:latlong2/latlong.dart';
 
+/// A class for route data to be represented on the map and in the route description.
 class Route {
   final List<LatLng> polylineRouteCoordinates;
   final List<Location> locations;

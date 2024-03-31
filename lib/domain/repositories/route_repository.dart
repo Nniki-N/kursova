@@ -2,11 +2,14 @@ import 'package:kursova/core/errors/route_exception.dart';
 import 'package:kursova/domain/entities/location.dart';
 import 'package:kursova/domain/entities/route.dart';
 
+/// Interface for the route repository.
 abstract class RouteRepository {
   const RouteRepository();
 
 
-  /// Retrieves main route for vehicle between locations in provided order.
+  /// Retrieves main route for vehicle between locations [orderedLocations] in provided order.
+  /// 
+  /// The route is simplified if it is too long. Еhe performed simplification does not affect the further accuracy of the route display on maps.
   ///
   /// Returns [Route] if request was successful.
   ///
@@ -20,7 +23,9 @@ abstract class RouteRepository {
   });
 
   
-  /// Retrieves optimized route for vehicle between locations.
+  /// Retrieves optimized route for vehicle between locations [locations].
+  /// 
+  /// The route is simplified if it is too long. Еhe performed simplification does not affect the further accuracy of the route display on maps.
   ///
   /// Set [withStartPoint] to true if first location in list has to be start of the route. Set [withEndPoint] to true if last location in list has to be end of the route.
   ///

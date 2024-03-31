@@ -23,6 +23,7 @@ void showCustomErrorSnackbar({
       displayDuration: Duration(seconds: displayDurationInSeconds),
     );
 
+/// A custom error snackbar widget.
 class CustomErrorSnackBar extends StatefulWidget {
   const CustomErrorSnackBar({
     Key? key,

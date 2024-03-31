@@ -2,8 +2,15 @@ import 'dart:math';
 
 import 'package:latlong2/latlong.dart';
 
+/// An util that is used for route optimization/simplification.
 abstract class RouteUtil {
-  /// Simplifies route by reducing route coordinates number.
+
+  /// Simplifies route by reducing route coordinates number from provided [routeCoordinates].
+  /// Douglas-Peucker algorithm is used for simplification.
+  /// 
+  /// Obligatorily set [cycledroute] to true if route is cycled, otherwise route will not be optimized!
+  /// 
+  /// Set [minimalRouteCoordinatesLengthToSimplify] to lower or higher number to change miimal bar for route simplification.
   static List<LatLng> simplifyCoordinatesRoute({
     required List<LatLng> routeCoordinates,
     required bool cycledroute,
@@ -17,6 +24,7 @@ abstract class RouteUtil {
 
     List<LatLng> tempLastCoordinates = [];
 
+    /// Removes from and saves last 1000 coordinates in temporary list to allow algorithm work as expected.
     if (cycledroute) {
       tempLastCoordinates = routeCoordinates.sublist(
         routeCoordinates.length - 1000,
@@ -37,7 +45,7 @@ abstract class RouteUtil {
     }
 
     final List<LatLng> simplifiedCoordinates = _douglasPeucker(
-      points: routeCoordinates,
+      coordinates: routeCoordinates,
       tolerance: tolerance,
     );
 
@@ -54,60 +62,71 @@ abstract class RouteUtil {
     return simplifiedCoordinates;
   }
 
-  /// Douglas Peucker method for reducing number of coordinates in the route.
+  /// Douglas Peucker method for reducing number of [coordinates] in the route.
+  /// 
+  /// The algorithm recursively breaks the route into shorter segments, using the points with the maximum deviation from the straight line between the starting and ending points of the route.
+  /// 
+  /// [tolerance] indicates the power of simplification. It is recomended to use 0.00001 to start from light simplification.
   static List<LatLng> _douglasPeucker({
-    required List<LatLng> points,
+    required List<LatLng> coordinates,
     required double tolerance,
   }) {
-    if (points.length < 3) {
-      return points;
+    if (coordinates.length < 3) {
+      return coordinates;
     }
 
     int furthestIndex = 0;
     double maxDistance = 0.0;
-    final LatLng start = points.first;
-    final LatLng end = points.last;
+    final LatLng start = coordinates.first;
+    final LatLng end = coordinates.last;
 
-    for (int i = 1; i < points.length - 1; i++) {
+    // Iterates through each point to find the furthest point.
+    for (int i = 1; i < coordinates.length - 1; i++) {
+      // Calculates the perpendicular distance of the point from the line formed by start and end points.
       final double distance = _perpendicularDistance(
-        point: points[i],
+        coordinate: coordinates[i],
         lineStart: start,
         lineEnd: end,
       );
 
+      // Updates the furthest point and its distance if a new maximum distance is found.
       if (distance > maxDistance) {
         maxDistance = distance;
         furthestIndex = i;
       }
     }
 
+    // If the maximum distance is greater than the tolerance, recursively simplifies the segments.
     if (maxDistance > tolerance) {
       final List<LatLng> simplified1 = _douglasPeucker(
-        points: points.sublist(0, furthestIndex + 1),
+        coordinates: coordinates.sublist(0, furthestIndex + 1),
         tolerance: tolerance,
       );
 
       final List<LatLng> simplified2 = _douglasPeucker(
-        points: points.sublist(furthestIndex, points.length),
+        coordinates: coordinates.sublist(furthestIndex, coordinates.length),
         tolerance: tolerance,
       );
 
+      // Combines the simplified segments and remove the duplicated point.
       return [
         ...simplified1.sublist(0, simplified1.length - 1),
         ...simplified2
       ];
     } else {
+      // If the maximum distance is within the tolerance, returns the start and end points.
       return [start, end];
     }
   }
 
+  /// Calculates the perpendicular distance from a point to a line.
   static double _perpendicularDistance({
-    required LatLng point,
+    required LatLng coordinate,
     required LatLng lineStart,
     required LatLng lineEnd,
   }) {
-    final double x = point.longitude;
-    final double y = point.latitude;
+    final double x = coordinate.longitude;
+    final double y = coordinate.latitude;
     final double x1 = lineStart.longitude;
     final double y1 = lineStart.latitude;
     final double x2 = lineEnd.longitude;

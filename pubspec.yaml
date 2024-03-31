@@ -54,7 +54,6 @@ flutter:
   assets:
     - assets/
     - assets/svgs/
-    - assets/images/
     - assets/google_fonts/
     - assets/translations/
 

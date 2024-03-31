@@ -1,5 +1,6 @@
 import 'package:kursova/core/utils/exception_util.dart';
 
+/// An exception interface for all Nominatim API exceptions.
 abstract class NominatimException implements Exception {
   final String message;
   final StackTrace? stackTrace;

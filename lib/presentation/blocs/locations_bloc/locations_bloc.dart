@@ -9,6 +9,7 @@ import 'package:kursova/presentation/blocs/locations_bloc/locations_event.dart';
 import 'package:kursova/presentation/blocs/locations_bloc/locations_state.dart';
 import 'package:logger/logger.dart';
 
+/// A BLoC that is responsible for locations adding and removing.
 class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
   LocationsBloc({
     required RetrieveLocationByCoordinatesUseCase
@@ -39,6 +40,11 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
 
   final int locationsLimit = 10;
 
+  /// Adds a new location by coordinate [LocationsAddNewLocationRequested.latLng] if locations limit was not reached.
+  /// 
+  /// Location data language will be based on [LocationsAddNewLocationRequested.locationDataLang].
+  /// 
+  /// Emits [LocationsNotEmpty] if location was added, otherwise emits [LocationsAddingLocationFailure].
   Future<void> _addNewLocation(
     LocationsAddNewLocationRequested event,
     Emitter<LocationsState> emit,
@@ -80,6 +86,11 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
     }
   }
 
+  /// Adds a new location based on current user position if locations limit was not reached.
+  /// 
+  /// Location data language will be based on [LocationsAddNewLocationRequested.locationDataLang].
+  /// 
+  /// Emits [LocationsNotEmpty] if location was added, otherwise emits [LocationsAddingCurrentLocationFailure].
   Future<void> _addCurrentUserLocation(
     LocationsAddCurrentUserLocationRequested event,
     Emitter<LocationsState> emit,
@@ -132,6 +143,11 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
     }
   }
 
+  /// Adds a new location based on provided address [LocationsAddLocationByAddressRequested.address] if locations limit was not reached.
+  /// 
+  /// Location data language will be based on [LocationsAddNewLocationRequested.locationDataLang].
+  /// 
+  /// Emits [LocationsNotEmpty] if location was added, otherwise emits [LocationsAddingLocationFailure].
   Future<void> _addLocationByAddress(
     LocationsAddLocationByAddressRequested event,
     Emitter<LocationsState> emit,
@@ -172,6 +188,9 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
     }
   }
 
+  /// Removes location based on location uid [LocationsRemoveLocationRequested.uid]
+  /// 
+  /// Emits [LocationsNotEmpty] if location was removed, otherwise emits [LocationsRemovingLocationFailure].
   Future<void> _removeLocation(
     LocationsRemoveLocationRequested event,
     Emitter<LocationsState> emit,
@@ -197,6 +216,9 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
     }
   }
 
+  /// Moves one location in order of locations based on new and old indexes [LocationsMoveOneLocationInOrderRequested.oldIndex] and [LocationsMoveOneLocationInOrderRequested.newIndex].
+  /// 
+  /// Emits [LocationsNotEmpty] if location was moved, otherwise emits [LocationMovingOneLocationInOrderFailure].
   Future<void> _moveOneLocationInOrder(
     LocationsMoveOneLocationInOrderRequested event,
     Emitter<LocationsState> emit,
@@ -230,6 +252,7 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
     }
   }
 
+  /// Emits [LocationsEmpty].
   Future<void> _clearLocations(
     LocationsClearLocationsRequested event,
     Emitter<LocationsState> emit,
@@ -237,6 +260,9 @@ class LocationsBloc extends Bloc<LocationsEvent, LocationsState> {
     emit(LocationsEmpty());
   }
 
+  /// Checks if locations limit was reached.
+  ///
+  /// Emits [LocationsReachedLocationsLimit] and returns true if location limit was reached.
   bool _reachedLocationsLimit({
     required Emitter<LocationsState> emit,
     required bool showMessage,

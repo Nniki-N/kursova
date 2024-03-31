@@ -1,3 +1,5 @@
+
+/// A class that contains all some basic values used in UI.
 class AppUIConstants {
   static const double commonBorderRadius = 10;
   static const double commonBorderWidth = 1.5;

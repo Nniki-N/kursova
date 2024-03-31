@@ -17,6 +17,7 @@ import 'package:logger/logger.dart';
 
 final getIt = GetIt.instance;
 
+/// Sets up all app dependencies.
 void setupDependencies() {
   // Common
   getIt.registerLazySingleton<Logger>(

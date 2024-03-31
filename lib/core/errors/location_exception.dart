@@ -1,5 +1,6 @@
 import 'package:kursova/core/utils/exception_util.dart';
 
+/// An exception interface for all location data retrieving exceptions.
 abstract class LocationException implements Exception {
   final String message;
   final StackTrace? stackTrace;

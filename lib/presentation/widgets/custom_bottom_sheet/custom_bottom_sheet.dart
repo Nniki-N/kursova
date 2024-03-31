@@ -3,6 +3,7 @@ import 'package:kursova/resources/app_colors.dart';
 import 'package:kursova/resources/app_typography.dart';
 import 'package:kursova/resources/app_ui_constants.dart';
 
+/// A custom bottom sheet widget.
 class CustomBottomSheet extends StatelessWidget {
   final double borderRadius;
   final double borderWidth;

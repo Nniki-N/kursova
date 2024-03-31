@@ -1,5 +1,6 @@
 import 'package:permission_handler/permission_handler.dart';
 
+/// A service for communication with device permission services.
 class PermissionsService {
   /// Checks the status of a specific [Permission]
   Future<PermissionStatus> status(Permission permission) {

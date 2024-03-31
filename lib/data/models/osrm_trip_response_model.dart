@@ -1,3 +1,5 @@
+
+/// A class that represents OSRM API's response for trip route creating request.
 class OsrmTripResponseModel {
   OsrmTripResponseModel({
     required this.code,

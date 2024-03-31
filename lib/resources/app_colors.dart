@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// A class that contains all colors used in UI.
 abstract class AppColors {
   // Common
   static const Color whitenColor = Color(0xFFFFFFFF);

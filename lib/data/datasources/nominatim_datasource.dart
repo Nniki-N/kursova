@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:kursova/core/errors/nominatim_exception.dart';
 import 'package:kursova/data/models/nominatim_response_model.dart';
 
-/// For use of the free Nominatim API
+/// A class for communication with Nominatim API.
 class NominatimDatasouce {
   const NominatimDatasouce({
     required http.Client client,
@@ -16,7 +16,9 @@ class NominatimDatasouce {
   final String _reverseServicePath = '/reverse';
   final String _searchServicePath = '/search';
 
-  /// Retrieves address data by provided coordinates.
+  /// Retrieves address data by provided coordinates [latitude] and [longitude].
+  /// 
+  /// [lang] represents language of response data. It has to be language code only. By default is 'en', which is language code of English.
   ///
   /// Returns [NominatimResponseModel] if request was successful.
   ///
@@ -68,7 +70,9 @@ class NominatimDatasouce {
     }
   }
 
-  /// Retrieves address data by provided coordinates.
+  /// Retrieves address data by provided address [address].
+  /// 
+  /// [lang] represents language of response data. It has to be language code only. By default is 'en', which is language code of English.
   ///
   /// Returns [NominatimResponseModel] if request was successful.
   ///

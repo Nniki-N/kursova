@@ -1,5 +1,6 @@
 import 'package:kursova/core/utils/exception_util.dart';
 
+/// An exception interface for all OSRM API exceptions.
 abstract class OsrmException implements Exception {
   final String message;
   final StackTrace? stackTrace;

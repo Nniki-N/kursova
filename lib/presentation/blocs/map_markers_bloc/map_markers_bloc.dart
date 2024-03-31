@@ -5,6 +5,7 @@ import 'package:kursova/presentation/blocs/map_markers_bloc/map_markers_event.da
 import 'package:kursova/presentation/blocs/map_markers_bloc/map_markers_state.dart';
 import 'package:logger/logger.dart';
 
+/// A BLoC that is responsible for markers that are displayed on the map.
 class MapMarkersBloc extends Bloc<MapMarkersEvent, MapMarkersState> {
   MapMarkersBloc({
     required Logger logger,
@@ -17,6 +18,9 @@ class MapMarkersBloc extends Bloc<MapMarkersEvent, MapMarkersState> {
 
   final Logger _logger;
 
+  /// Adds a new marker if markers limit was not reached.
+  /// 
+  /// Emits [MapMarkersNotEmpty].
   Future<void> _addMarker(
     MapMarkersAddMakerRequested event,
     Emitter<MapMarkersState> emit,
@@ -45,6 +49,9 @@ class MapMarkersBloc extends Bloc<MapMarkersEvent, MapMarkersState> {
     }
   }
 
+  /// Replaces all previous markers by provided [MapMarkersReplaceMarkersRequested.coordinatesList].
+  /// 
+  /// Emits [MapMarkersNotEmpty].
   Future<void> _replaceMarkers(
     MapMarkersReplaceMarkersRequested event,
     Emitter<MapMarkersState> emit,
@@ -68,6 +75,7 @@ class MapMarkersBloc extends Bloc<MapMarkersEvent, MapMarkersState> {
     }
   }
 
+  /// Emits [MapMarkersEmpty].
   Future<void> _clearMarkers(
     MapMarkersClearMarkersRequested event,
     Emitter<MapMarkersState> emit,
@@ -75,6 +83,9 @@ class MapMarkersBloc extends Bloc<MapMarkersEvent, MapMarkersState> {
     emit(MapMarkersEmpty());
   }
 
+  /// Checks if locations limit was reached.
+  ///
+  /// Emits [MapMarkersReachedMarkersLimit] and returns true if location limit was reached.
   bool _reachedLocationsLimit(Emitter<MapMarkersState> emit) {
     if (state.locationMarkers.length == AppConstants.locationsLimit) {
       emit(MapMarkersReachedMarkersLimit(

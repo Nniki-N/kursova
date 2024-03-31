@@ -5,6 +5,7 @@ enum CnnectionStatus {
   disconnected,
 }
 
+/// A service for network monitoring.
 class ConnectionService {
   /// Checks the connection status of the device.
   Future<CnnectionStatus> checkConnectivity() async {
@@ -23,6 +24,7 @@ class ConnectionService {
         .asBroadcastStream();
   }
 
+  /// Coverts [connectivityResult] only in two possible statuses: [CnnectionStatus.connected] or [CnnectionStatus.disconnected]
   CnnectionStatus _convertConnectivityResult(
     ConnectivityResult connectivityResult,
   ) {

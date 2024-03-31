@@ -9,6 +9,7 @@ void setUpBlocObserver({
   );
 }
 
+/// A BLoC Observer with overrided methods to log every change.
 class AppBlocObserver extends BlocObserver {
   final Logger _logger;
 

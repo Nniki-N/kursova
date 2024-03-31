@@ -1,6 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
+/// A service for communication with device location services.
 class LocationService {
   /// Returns current location of the device.
   Future<LatLng> getCurrentPosition() async {
